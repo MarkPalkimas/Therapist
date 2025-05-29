@@ -1,0 +1,15 @@
+# Node & pnpm
+node_modules/
+pnpm-lock.yaml
+
+# Next.js
+.next/
+
+# Build outputs
+dist/
+
+# Local env
+.env.local
+
+# macOS
+.DS_Store
