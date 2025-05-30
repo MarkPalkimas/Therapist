@@ -1,15 +1,16 @@
 import { NextResponse } from 'next/server';
-import { getAuth } from '@clerk/nextjs/server';
+import { auth } from '@clerk/nextjs/server';
 
 export async function POST(request: Request) {
-  const { userId } = getAuth(request);
+  const { userId } = auth();
+
   if (!userId) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
   const { message } = await request.json();
-  // Forward to your backend chat endpoint
-  const res = await fetch('http://localhost:4000/chat', {
+
+  const res = await fetch(`${process.env.BACKEND_URL || 'http://localhost:4000'}/chat`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ userId, message }),
