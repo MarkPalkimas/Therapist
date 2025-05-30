@@ -1,15 +1,14 @@
-import { NextResponse } from 'next/server';
-import { auth } from '@clerk/nextjs';
-import type { NextRequest } from 'next/server'; // ✅ Import NextRequest
+import { NextRequest, NextResponse } from 'next/server';
+import { auth } from '@clerk/nextjs/server';
 
-export async function POST(req: NextRequest) { // ✅ Use NextRequest here
-  const { userId } = auth(req); // ✅ Pass the full NextRequest to auth()
+export async function POST(request: NextRequest) {
+  const { userId } = auth();
 
   if (!userId) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
-  const { message } = await req.json();
+  const { message } = await request.json();
 
   const res = await fetch(`${process.env.BACKEND_URL || 'http://localhost:4000'}/chat`, {
     method: 'POST',
