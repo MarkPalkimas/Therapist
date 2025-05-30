@@ -1,0 +1,8 @@
+groups:
+- name: moodai_metrics
+  interval: 15s
+  rules:
+  - record: moodai_chat_requests_total
+    expr: "moodai_chat_requests_total"
+  - record: moodai_chat_latency_p95
+    expr: "histogram_quantile(0.95, sum(rate(moodai_chat_latency_seconds_bucket[1m])) by (le))"
