@@ -1,9 +1,9 @@
 import { NextResponse } from 'next/server';
 import { auth } from '@clerk/nextjs';
-import type { NextRequest } from 'next/server';
+import type { NextRequest } from 'next/server'; // ✅ Import NextRequest
 
-export async function POST(req: NextRequest) {
-  const { userId } = auth(req);
+export async function POST(req: NextRequest) { // ✅ Use NextRequest here
+  const { userId } = auth(req); // ✅ Pass the full NextRequest to auth()
 
   if (!userId) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
