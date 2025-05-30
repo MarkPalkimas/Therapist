@@ -24,9 +24,9 @@ export default function Home() {
       });
       const { reply } = await res.json();
       setMessages((prev) => [...prev, { role: "assistant", content: reply }]);
-    } catch (err) {
-      setMessages((prev) => [...prev, { role: "assistant", content: "Sorry, something went wrong." }]);
-    } finally {
+    } catch {
+  setMessages((prev) => [...prev, { role: "assistant", content: "Sorry, something went wrong." }]);
+} finally {
       setLoading(false);
     }
   }
