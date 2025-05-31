@@ -1,7 +1,7 @@
 "use client";
-import { useState } from "react";
 import { SignInButton, UserButton, SignedIn, SignedOut } from "@clerk/nextjs";
 import { Card } from "@/components/ui/card";
+import React, { useState } from "react";
 
 export default function Home() {
   const [messages, setMessages] = useState([
@@ -10,7 +10,7 @@ export default function Home() {
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
 
-  async function sendMessage(e) {
+async function sendMessage(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     if (!input.trim()) return;
     setMessages((prev) => [...prev, { role: "user", content: input }]);
