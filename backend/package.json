@@ -8,7 +8,7 @@
   },
   "dependencies": {
     "@prisma/client": "^6.8.2",
-    "@vercel/node": "^2.3.0",
+    "@vercel/node": "^2.15.10",
     "dotenv": "^16.5.0",
     "openai": "^5.0.1",
     "prom-client": "^15.1.3"
