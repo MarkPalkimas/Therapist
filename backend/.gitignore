@@ -1,5 +1,20 @@
-node_modules
-# Keep environment variables out of version control
+# Node modules and build output
+node_modules/
+dist/
+
+# Environment files
 .env
 
+# Local SQLite database (only for development)
+prisma/dev.db
+
+# Prisma client (generated) is not committed because we regenerate on build
 /src/generated/prisma
+
+# Test files
+src/test-prisma.ts
+
+# Miscellaneous temp folders that shouldn’t go to Git
+npx/
+backend@1.0.0
+frontend/
