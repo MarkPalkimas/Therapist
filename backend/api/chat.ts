@@ -1,3 +1,4 @@
+// trigger-redetect
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import * as dotenv from 'dotenv';
 import OpenAI from 'openai';
