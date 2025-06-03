@@ -1,12 +1,13 @@
 // Therapist/frontend/src/app/api/chat/route.ts
 
 import { getAuth } from "@clerk/nextjs/server";
+import { useServerInsertedHTML } from "next/navigation";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(request: NextRequest) {
   try {
     // Retrieve Clerk session information from the incoming request
-    const { userId } = getAuth(request);
+const { userId } = getAuth(request);
 
     if (!userId) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });

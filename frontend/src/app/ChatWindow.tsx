@@ -1,4 +1,4 @@
-// Therapist/frontend/src/app/ChatWindow.tsx
+// File: Therapist/frontend/src/app/ChatWindow.tsx
 "use client";
 
 import { useState } from "react";
@@ -16,14 +16,16 @@ export default function ChatWindow() {
     setError(null);
 
     try {
-      const res = await fetch("/api/chat", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message: trimmed }),
-      });
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/chat`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ message: trimmed }),
+        }
+      );
 
       if (!res.ok) {
-        // Read the response body (could be JSON or text)
         let body = "";
         try {
           const json = await res.json();
@@ -37,9 +39,9 @@ export default function ChatWindow() {
         return;
       }
 
-      // If 200 OK, you can parse a JSON reply in the future.
-      // For now, just echo a placeholder:
-      setChatLog((prev) => [...prev, `Bot: (no reply logic yet)`]);
+      // Parse JSON reply from backend
+      const { reply } = await res.json();
+      setChatLog((prev) => [...prev, `Bot: ${reply}`]);
     } catch (e: any) {
       const errMsg = `Fetch failed: ${e.message}`;
       setError(errMsg);
