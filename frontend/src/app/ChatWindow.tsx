@@ -42,8 +42,8 @@ export default function ChatWindow() {
       // Parse JSON reply from backend
       const { reply } = await res.json();
       setChatLog((prev) => [...prev, `Bot: ${reply}`]);
-    } catch (e: any) {
-      const errMsg = `Fetch failed: ${e.message}`;
+    } catch (e) {
+      const errMsg = `Fetch failed: ${e instanceof Error ? e.message : String(e)}`;
       setError(errMsg);
       setChatLog((prev) => [...prev, errMsg]);
     }
