@@ -1,31 +1,37 @@
 import Link from "next/link";
 import { SignInButton, SignUpButton, SignedIn, SignedOut } from "@clerk/nextjs";
+import { Sparkles, Shield, Clock, Heart, ArrowRight, MessageCircle } from "lucide-react";
 
 export const dynamic = 'force-dynamic';
 
 export default function LandingPage() {
   return (
-    <div className="min-h-screen bg-[#0f0f0f]">
-      {/* Minimal Navigation */}
-      <nav className="fixed top-0 w-full z-50 bg-[#0f0f0f]/80 backdrop-blur-md border-b border-white/5">
-        <div className="max-w-6xl mx-auto px-6 py-5 flex justify-between items-center">
-          <div className="text-lg font-medium text-white/90 tracking-tight">Therapist</div>
+    <div className="min-h-screen">
+      {/* Navigation */}
+      <nav className="fixed top-0 w-full z-50 glass border-b border-stone-200/50">
+        <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+          <div className="flex items-center gap-2">
+            <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center">
+              <Heart className="w-4 h-4 text-white" />
+            </div>
+            <span className="text-lg font-semibold text-stone-900">Therapist</span>
+          </div>
           <div className="flex gap-3">
             <SignedOut>
               <SignInButton mode="modal">
-                <button className="px-5 py-2 text-white/60 hover:text-white/90 transition-colors text-sm font-medium">
+                <button className="px-5 py-2 text-stone-600 hover:text-stone-900 transition-colors text-sm font-medium">
                   Sign In
                 </button>
               </SignInButton>
               <SignUpButton mode="modal">
-                <button className="px-5 py-2 bg-white/10 hover:bg-white/15 text-white rounded-full transition-all text-sm font-medium backdrop-blur-sm">
+                <button className="px-6 py-2.5 bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white rounded-xl transition-all text-sm font-medium shadow-lg shadow-indigo-500/25 hover-lift">
                   Get Started
                 </button>
               </SignUpButton>
             </SignedOut>
             <SignedIn>
               <Link href="/chat">
-                <button className="px-5 py-2 bg-white/10 hover:bg-white/15 text-white rounded-full transition-all text-sm font-medium backdrop-blur-sm">
+                <button className="px-6 py-2.5 bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white rounded-xl transition-all text-sm font-medium shadow-lg shadow-indigo-500/25 hover-lift">
                   Open App
                 </button>
               </Link>
@@ -34,41 +40,219 @@ export default function LandingPage() {
         </div>
       </nav>
 
-      {/* Hero Section - Extremely Minimal */}
-      <section className="pt-40 pb-32 px-6">
-        <div className="max-w-3xl mx-auto text-center">
-          <h1 className="text-6xl md:text-7xl font-light text-white/95 mb-8 tracking-tight leading-[1.1]">
+      {/* Hero Section */}
+      <section className="pt-32 pb-20 px-6 relative overflow-hidden">
+        {/* Background decoration */}
+        <div className="absolute inset-0 -z-10">
+          <div className="absolute top-20 left-10 w-72 h-72 bg-purple-300/20 rounded-full blur-3xl"></div>
+          <div className="absolute top-40 right-10 w-96 h-96 bg-indigo-300/20 rounded-full blur-3xl"></div>
+          <div className="absolute bottom-20 left-1/3 w-80 h-80 bg-pink-300/20 rounded-full blur-3xl"></div>
+        </div>
+
+        <div className="max-w-5xl mx-auto text-center relative">
+          <div className="inline-flex items-center gap-2 px-4 py-2 bg-white/80 backdrop-blur-sm rounded-full border border-stone-200/50 mb-8 animate-slide-up">
+            <Sparkles className="w-4 h-4 text-indigo-500" />
+            <span className="text-sm text-stone-600 font-medium">Your personal space for reflection</span>
+          </div>
+          
+          <h1 className="text-6xl md:text-7xl font-bold text-stone-900 mb-6 leading-tight tracking-tight animate-slide-up" style={{ animationDelay: '0.1s' }}>
             A calm space to
             <br />
-            <span className="text-white/40">talk things through</span>
+            <span className="gradient-text">talk things through</span>
           </h1>
-          <p className="text-lg text-white/50 mb-12 max-w-xl mx-auto font-light leading-relaxed">
-            Private AI conversations designed to help you reflect, process thoughts, and slow down.
+          
+          <p className="text-xl text-stone-600 mb-10 max-w-2xl mx-auto leading-relaxed animate-slide-up" style={{ animationDelay: '0.2s' }}>
+            Private, thoughtful conversations with an AI companion designed to help you process emotions, reflect on your day, and find clarity.
+          </p>
+          
+          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center animate-slide-up" style={{ animationDelay: '0.3s' }}>
+            <SignedOut>
+              <SignUpButton mode="modal">
+                <button className="px-8 py-4 bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white rounded-xl transition-all text-base font-semibold shadow-xl shadow-indigo-500/30 hover-lift flex items-center gap-2">
+                  Start Talking
+                  <ArrowRight className="w-5 h-5" />
+                </button>
+              </SignUpButton>
+            </SignedOut>
+            <SignedIn>
+              <Link href="/chat">
+                <button className="px-8 py-4 bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white rounded-xl transition-all text-base font-semibold shadow-xl shadow-indigo-500/30 hover-lift flex items-center gap-2">
+                  Continue
+                  <ArrowRight className="w-5 h-5" />
+                </button>
+              </Link>
+            </SignedIn>
+            <button className="px-8 py-4 bg-white/80 backdrop-blur-sm hover:bg-white text-stone-700 rounded-xl transition-all text-base font-semibold border border-stone-200/50 hover-lift">
+              Learn More
+            </button>
+          </div>
+        </div>
+      </section>
+
+      {/* Features Section */}
+      <section className="py-24 px-6 relative">
+        <div className="max-w-6xl mx-auto">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold text-stone-900 mb-4">Why choose Therapist?</h2>
+            <p className="text-lg text-stone-600 max-w-2xl mx-auto">
+              A safe, supportive space designed with your wellbeing in mind
+            </p>
+          </div>
+          
+          <div className="grid md:grid-cols-3 gap-8">
+            <FeatureCard
+              icon={<Shield className="w-6 h-6" />}
+              title="Private & Secure"
+              description="Your conversations are encrypted and never shared. Complete privacy guaranteed."
+              gradient="from-blue-500 to-cyan-500"
+            />
+            <FeatureCard
+              icon={<Clock className="w-6 h-6" />}
+              title="Always Available"
+              description="24/7 support whenever you need someone to talk to. No appointments, no waiting."
+              gradient="from-purple-500 to-pink-500"
+            />
+            <FeatureCard
+              icon={<MessageCircle className="w-6 h-6" />}
+              title="Thoughtful Responses"
+              description="Trained to listen, reflect, and help you process complex emotions with care."
+              gradient="from-indigo-500 to-purple-500"
+            />
+          </div>
+        </div>
+      </section>
+
+      {/* How It Works */}
+      <section className="py-24 px-6 bg-gradient-to-br from-indigo-50/50 to-purple-50/30 relative">
+        <div className="max-w-5xl mx-auto">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold text-stone-900 mb-4">How it works</h2>
+            <p className="text-lg text-stone-600">Simple, supportive, and designed for you</p>
+          </div>
+          
+          <div className="space-y-8">
+            <StepCard
+              number="1"
+              title="Create your account"
+              description="Sign up in seconds and enter your private space"
+            />
+            <StepCard
+              number="2"
+              title="Start the conversation"
+              description="Share what's on your mind or choose from thoughtful prompts"
+            />
+            <StepCard
+              number="3"
+              title="Reflect and grow"
+              description="Gain insights, process emotions, and find clarity through supportive dialogue"
+            />
+          </div>
+        </div>
+      </section>
+
+      {/* Trust Section */}
+      <section className="py-24 px-6">
+        <div className="max-w-4xl mx-auto">
+          <div className="glass rounded-3xl p-12 text-center soft-shadow-lg">
+            <div className="w-16 h-16 bg-gradient-to-br from-amber-400 to-orange-500 rounded-2xl flex items-center justify-center mx-auto mb-6">
+              <Shield className="w-8 h-8 text-white" />
+            </div>
+            <h2 className="text-3xl font-bold text-stone-900 mb-4">
+              Important to know
+            </h2>
+            <p className="text-stone-600 leading-relaxed max-w-2xl mx-auto">
+              Therapist AI provides supportive conversation but is not a replacement for professional mental health care. 
+              This AI is not a licensed therapist and cannot diagnose conditions or provide medical advice. 
+              If you&apos;re experiencing a mental health crisis, please contact a crisis helpline or emergency services immediately.
+            </p>
+            <div className="mt-8 pt-8 border-t border-stone-200">
+              <p className="text-sm text-stone-500">
+                <strong className="text-stone-700">In crisis?</strong> Call 988 (US) • Text HELLO to 741741 • Contact emergency services
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* CTA Section */}
+      <section className="py-24 px-6 relative overflow-hidden">
+        <div className="absolute inset-0 -z-10">
+          <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-indigo-100/50 via-purple-100/30 to-pink-100/50"></div>
+        </div>
+        
+        <div className="max-w-4xl mx-auto text-center">
+          <h2 className="text-5xl font-bold text-stone-900 mb-6">
+            Ready to start?
+          </h2>
+          <p className="text-xl text-stone-600 mb-10 max-w-2xl mx-auto">
+            Join thousands finding clarity and support through thoughtful conversation
           </p>
           <SignedOut>
             <SignUpButton mode="modal">
-              <button className="px-8 py-4 bg-white text-[#0f0f0f] rounded-full transition-all text-base font-medium hover:bg-white/90 shadow-lg shadow-white/10">
-                Start Talking
+              <button className="px-10 py-5 bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white rounded-xl transition-all text-lg font-semibold shadow-2xl shadow-indigo-500/30 hover-lift">
+                Get Started Free
               </button>
             </SignUpButton>
           </SignedOut>
           <SignedIn>
             <Link href="/chat">
-              <button className="px-8 py-4 bg-white text-[#0f0f0f] rounded-full transition-all text-base font-medium hover:bg-white/90 shadow-lg shadow-white/10">
-                Continue
+              <button className="px-10 py-5 bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white rounded-xl transition-all text-lg font-semibold shadow-2xl shadow-indigo-500/30 hover-lift">
+                Open App
               </button>
             </Link>
           </SignedIn>
         </div>
       </section>
 
-      {/* Minimal Footer */}
-      <footer className="fixed bottom-0 w-full py-6 px-6 border-t border-white/5 bg-[#0f0f0f]/80 backdrop-blur-md">
-        <div className="max-w-6xl mx-auto flex justify-between items-center text-xs text-white/30">
-          <p>Not a replacement for professional care</p>
-          <p>In crisis, call 988</p>
+      {/* Footer */}
+      <footer className="py-12 px-6 border-t border-stone-200/50 bg-white/50 backdrop-blur-sm">
+        <div className="max-w-6xl mx-auto text-center">
+          <div className="flex items-center justify-center gap-2 mb-4">
+            <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center">
+              <Heart className="w-4 h-4 text-white" />
+            </div>
+            <span className="text-lg font-semibold text-stone-900">Therapist</span>
+          </div>
+          <p className="text-sm text-stone-500">
+            © 2026 Therapist AI. Built with care for emotional wellbeing.
+          </p>
         </div>
       </footer>
+    </div>
+  );
+}
+
+function FeatureCard({ icon, title, description, gradient }: { 
+  icon: React.ReactNode; 
+  title: string; 
+  description: string;
+  gradient: string;
+}) {
+  return (
+    <div className="glass rounded-2xl p-8 hover-lift transition-smooth group">
+      <div className={`w-14 h-14 bg-gradient-to-br ${gradient} rounded-xl flex items-center justify-center mb-6 text-white group-hover:scale-110 transition-transform`}>
+        {icon}
+      </div>
+      <h3 className="text-xl font-semibold text-stone-900 mb-3">{title}</h3>
+      <p className="text-stone-600 leading-relaxed">{description}</p>
+    </div>
+  );
+}
+
+function StepCard({ number, title, description }: { 
+  number: string; 
+  title: string; 
+  description: string;
+}) {
+  return (
+    <div className="flex gap-6 items-start group">
+      <div className="flex-shrink-0 w-14 h-14 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-2xl flex items-center justify-center text-white font-bold text-xl shadow-lg shadow-indigo-500/25 group-hover:scale-110 transition-transform">
+        {number}
+      </div>
+      <div className="flex-1 glass rounded-2xl p-6 hover-lift transition-smooth">
+        <h3 className="text-xl font-semibold text-stone-900 mb-2">{title}</h3>
+        <p className="text-stone-600">{description}</p>
+      </div>
     </div>
   );
 }

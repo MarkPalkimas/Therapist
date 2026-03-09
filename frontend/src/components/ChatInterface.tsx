@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { Send, Sparkles } from "lucide-react";
+import { Send, Sparkles, Loader2 } from "lucide-react";
 
 type Message = {
   role: "user" | "assistant";
@@ -9,10 +9,10 @@ type Message = {
 };
 
 const STARTER_PROMPTS = [
-  "I feel overwhelmed today",
-  "I need help processing something",
-  "I want to reflect on my day",
-  "I feel anxious about something",
+  { text: "I feel overwhelmed today", emoji: "😔" },
+  { text: "I need help processing something", emoji: "💭" },
+  { text: "I want to reflect on my day", emoji: "✨" },
+  { text: "I feel anxious about something", emoji: "😰" },
 ];
 
 export default function ChatInterface() {
@@ -32,10 +32,9 @@ export default function ChatInterface() {
   }, [messages]);
 
   useEffect(() => {
-    // Auto-resize textarea
     if (textareaRef.current) {
       textareaRef.current.style.height = 'auto';
-      textareaRef.current.style.height = textareaRef.current.scrollHeight + 'px';
+      textareaRef.current.style.height = Math.min(textareaRef.current.scrollHeight, 150) + 'px';
     }
   }, [input]);
 
@@ -47,7 +46,6 @@ export default function ChatInterface() {
     setInput("");
     setError(null);
 
-    // Add user message
     const newMessages: Message[] = [
       ...messages,
       { role: "user", content: userMessage },
@@ -100,31 +98,37 @@ export default function ChatInterface() {
   };
 
   return (
-    <div className="flex-1 flex flex-col h-full relative">
+    <div className="flex-1 flex flex-col h-full relative bg-gradient-to-br from-stone-50 via-amber-50/30 to-rose-50/20">
       {/* Messages Area */}
       <div className="flex-1 overflow-y-auto px-6 py-8">
-        <div className="max-w-3xl mx-auto space-y-6">
+        <div className="max-w-4xl mx-auto space-y-6">
           {messages.length === 0 ? (
-            <div className="flex flex-col items-center justify-center min-h-[60vh] space-y-8">
+            <div className="flex flex-col items-center justify-center min-h-[60vh] space-y-8 animate-fade-in">
               <div className="text-center space-y-4">
-                <div className="w-16 h-16 mx-auto bg-white/5 rounded-full flex items-center justify-center">
-                  <Sparkles className="w-8 h-8 text-white/40" />
+                <div className="w-20 h-20 mx-auto bg-gradient-to-br from-indigo-500 to-purple-600 rounded-3xl flex items-center justify-center shadow-xl shadow-indigo-500/25 animate-scale-in">
+                  <Sparkles className="w-10 h-10 text-white" />
                 </div>
-                <h2 className="text-2xl font-light text-white/90">How are you feeling?</h2>
-                <p className="text-white/40 text-sm max-w-md">
+                <h2 className="text-3xl font-bold text-stone-900">How are you feeling today?</h2>
+                <p className="text-stone-600 text-lg max-w-md">
                   Share what&apos;s on your mind, or choose a prompt below to get started
                 </p>
               </div>
               
               {/* Starter Prompts */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-3 w-full max-w-2xl">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full max-w-2xl">
                 {STARTER_PROMPTS.map((prompt, index) => (
                   <button
                     key={index}
-                    onClick={() => handleStarterPrompt(prompt)}
-                    className="px-6 py-4 bg-white/5 hover:bg-white/10 border border-white/10 rounded-2xl text-left text-white/70 hover:text-white/90 transition-all text-sm"
+                    onClick={() => handleStarterPrompt(prompt.text)}
+                    className="glass px-6 py-5 rounded-2xl text-left hover-lift transition-smooth group"
+                    style={{ animationDelay: `${index * 0.1}s` }}
                   >
-                    {prompt}
+                    <div className="flex items-start gap-3">
+                      <span className="text-2xl">{prompt.emoji}</span>
+                      <span className="text-stone-700 group-hover:text-stone-900 font-medium">
+                        {prompt.text}
+                      </span>
+                    </div>
                   </button>
                 ))}
               </div>
@@ -136,13 +140,14 @@ export default function ChatInterface() {
                   key={index}
                   className={`flex ${
                     message.role === "user" ? "justify-end" : "justify-start"
-                  } animate-in fade-in slide-in-from-bottom-4 duration-500`}
+                  } animate-slide-in-right`}
+                  style={{ animationDelay: `${index * 0.05}s` }}
                 >
                   <div
                     className={`max-w-[85%] rounded-3xl px-6 py-4 ${
                       message.role === "user"
-                        ? "bg-white/10 text-white/90 backdrop-blur-sm"
-                        : "bg-white/5 text-white/80 border border-white/10"
+                        ? "bg-gradient-to-br from-indigo-500 to-purple-600 text-white shadow-lg shadow-indigo-500/25"
+                        : "glass text-stone-800 soft-shadow"
                     }`}
                   >
                     <p className="whitespace-pre-wrap leading-relaxed text-[15px]">
@@ -153,20 +158,17 @@ export default function ChatInterface() {
               ))}
               
               {isLoading && (
-                <div className="flex justify-start animate-in fade-in duration-300">
-                  <div className="bg-white/5 border border-white/10 rounded-3xl px-6 py-4 flex items-center gap-3">
-                    <div className="flex gap-1">
-                      <div className="w-2 h-2 bg-white/40 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
-                      <div className="w-2 h-2 bg-white/40 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
-                      <div className="w-2 h-2 bg-white/40 rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
-                    </div>
+                <div className="flex justify-start animate-fade-in">
+                  <div className="glass rounded-3xl px-6 py-4 flex items-center gap-3 soft-shadow">
+                    <Loader2 className="w-5 h-5 text-indigo-500 animate-spin" />
+                    <span className="text-stone-600 text-sm font-medium">Thinking...</span>
                   </div>
                 </div>
               )}
 
               {error && (
-                <div className="flex justify-center">
-                  <div className="bg-red-500/10 border border-red-500/20 rounded-2xl px-5 py-3 text-red-400/90 text-sm">
+                <div className="flex justify-center animate-fade-in">
+                  <div className="bg-red-50 border border-red-200 rounded-2xl px-6 py-4 text-red-600 text-sm font-medium">
                     {error}
                   </div>
                 </div>
@@ -179,9 +181,9 @@ export default function ChatInterface() {
       </div>
 
       {/* Input Area */}
-      <div className="border-t border-white/5 bg-[#0f0f0f]/80 backdrop-blur-md px-6 py-6">
-        <form onSubmit={(e) => { e.preventDefault(); handleSubmit(); }} className="max-w-3xl mx-auto">
-          <div className="flex gap-3 items-end bg-white/5 rounded-3xl p-2 border border-white/10 focus-within:border-white/20 transition-colors">
+      <div className="border-t border-stone-200/50 glass px-6 py-6">
+        <form onSubmit={(e) => { e.preventDefault(); handleSubmit(); }} className="max-w-4xl mx-auto">
+          <div className="flex gap-3 items-end bg-white rounded-3xl p-3 soft-shadow border border-stone-200/50 focus-within:border-indigo-300 focus-within:shadow-lg focus-within:shadow-indigo-500/10 transition-all">
             <textarea
               ref={textareaRef}
               value={input}
@@ -189,17 +191,18 @@ export default function ChatInterface() {
               onKeyDown={handleKeyDown}
               placeholder="Share what's on your mind..."
               rows={1}
-              className="flex-1 bg-transparent text-white/90 placeholder-white/30 px-4 py-3 resize-none focus:outline-none text-[15px] max-h-32"
+              className="flex-1 bg-transparent text-stone-900 placeholder-stone-400 px-3 py-2 resize-none focus:outline-none text-[15px]"
+              style={{ maxHeight: '150px' }}
             />
             <button
               type="submit"
               disabled={!input.trim() || isLoading}
-              className="flex-shrink-0 bg-white/10 hover:bg-white/15 disabled:bg-white/5 disabled:cursor-not-allowed text-white/90 disabled:text-white/30 rounded-full p-3 transition-all"
+              className="flex-shrink-0 bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 disabled:from-stone-300 disabled:to-stone-400 disabled:cursor-not-allowed text-white rounded-2xl p-3 transition-all shadow-lg shadow-indigo-500/25 hover:shadow-xl hover:shadow-indigo-500/30 hover:scale-105"
             >
               <Send className="w-5 h-5" />
             </button>
           </div>
-          <p className="text-xs text-white/30 mt-3 text-center font-light">
+          <p className="text-xs text-stone-500 mt-3 text-center">
             Press Enter to send • Shift + Enter for new line
           </p>
         </form>
