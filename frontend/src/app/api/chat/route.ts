@@ -1,6 +1,6 @@
 import { auth } from "@clerk/nextjs/server";
 import { NextRequest, NextResponse } from "next/server";
-import OpenAI from "openai";
+import { GoogleGenerativeAI } from "@google/generative-ai";
 
 // Force dynamic rendering
 export const dynamic = 'force-dynamic';
@@ -52,6 +52,11 @@ Conversation Style:
 
 Remember: Your role is to be a supportive companion for reflection, not to fix or solve. Create space for them to process, understand, and find their own insights.`;
 
+interface Message {
+  role: string;
+  content: string;
+}
+
 export async function POST(req: NextRequest) {
   console.log("=== Chat API called ===");
   
@@ -93,7 +98,7 @@ export async function POST(req: NextRequest) {
       );
     }
     
-    const { messages } = body;
+    const { messages } = body as { messages: Message[] };
     console.log("Messages received:", messages?.length, "messages");
 
     if (!messages || !Array.isArray(messages)) {
@@ -104,42 +109,54 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Validate OpenAI API key
-    console.log("Step 3: Validating OpenAI API key...");
-    const apiKey = process.env.OPENAI_API_KEY || process.env.OPENAI_SECRET_API_KEY;
+    // Validate Gemini API key
+    console.log("Step 3: Validating Gemini API key...");
+    const apiKey = process.env.GEMINI_API_KEY;
     console.log("API key exists:", !!apiKey);
     console.log("API key length:", apiKey?.length);
-    console.log("API key prefix:", apiKey?.substring(0, 10));
     
     if (!apiKey) {
-      console.error("OPENAI_API_KEY is not configured in environment");
+      console.error("GEMINI_API_KEY is not configured in environment");
       return NextResponse.json(
         { error: "Service configuration error" },
         { status: 500 }
       );
     }
 
-    // Initialize OpenAI client
-    console.log("Step 4: Initializing OpenAI client...");
-    const openai = new OpenAI({
-      apiKey: apiKey,
+    // Initialize Gemini client
+    console.log("Step 4: Initializing Gemini client...");
+    const genAI = new GoogleGenerativeAI(apiKey);
+    const model = genAI.getGenerativeModel({ 
+      model: "gemini-1.5-flash",
+      systemInstruction: THERAPIST_SYSTEM_PROMPT,
     });
 
-    // Call OpenAI API
-    console.log("Step 5: Calling OpenAI API with", messages.length, "messages...");
-    const completion = await openai.chat.completions.create({
-      model: "gpt-4o-mini",
-      messages: [
-        { role: "system", content: THERAPIST_SYSTEM_PROMPT },
-        ...messages,
-      ],
-      temperature: 0.8,
-      max_tokens: 1000,
+    // Convert messages to Gemini format
+    console.log("Step 5: Converting messages to Gemini format...");
+    const history = messages.slice(0, -1).map((msg) => ({
+      role: msg.role === "assistant" ? "model" : "user",
+      parts: [{ text: msg.content }],
+    }));
+
+    const lastMessage = messages[messages.length - 1];
+    
+    // Start chat with history
+    console.log("Step 6: Starting Gemini chat with", history.length, "history messages...");
+    const chat = model.startChat({
+      history,
+      generationConfig: {
+        temperature: 0.8,
+        maxOutputTokens: 1000,
+      },
     });
 
-    console.log("Step 6: OpenAI response received successfully");
-    const reply = completion.choices[0]?.message?.content || "I'm here to listen. Could you tell me more?";
+    // Send the latest message
+    console.log("Step 7: Sending message to Gemini...");
+    const result = await chat.sendMessage(lastMessage.content);
+    const response = result.response;
+    const reply = response.text() || "I'm here to listen. Could you tell me more?";
 
+    console.log("Step 8: Gemini response received successfully");
     return NextResponse.json({ reply });
   } catch (error) {
     console.error("=== CHAT API ERROR ===");
@@ -151,13 +168,6 @@ export async function POST(req: NextRequest) {
       console.error("Error name:", error.name);
       console.error("Error message:", error.message);
       console.error("Error stack:", error.stack);
-    }
-    
-    // Check if it's an OpenAI API error
-    if (error && typeof error === 'object' && 'status' in error) {
-      const apiError = error as { status?: number; error?: unknown };
-      console.error("OpenAI API error status:", apiError.status);
-      console.error("OpenAI API error details:", JSON.stringify(apiError.error));
     }
     
     return NextResponse.json(
