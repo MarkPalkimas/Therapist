@@ -53,22 +53,51 @@ Conversation Style:
 Remember: Your role is to be a supportive companion for reflection, not to fix or solve. Create space for them to process, understand, and find their own insights.`;
 
 export async function POST(req: NextRequest) {
+  console.log("=== Chat API called ===");
+  
   try {
     // Authenticate the user
-    const { userId } = await auth();
+    console.log("Step 1: Authenticating user...");
+    let userId: string | null = null;
+    
+    try {
+      const authResult = await auth();
+      userId = authResult?.userId || null;
+      console.log("Auth result:", { userId, hasAuth: !!authResult });
+    } catch (authError) {
+      console.error("Auth error:", authError);
+      return NextResponse.json(
+        { error: "Authentication failed" },
+        { status: 401 }
+      );
+    }
     
     if (!userId) {
+      console.error("No user ID found after auth");
       return NextResponse.json(
-        { error: "Unauthorized" },
+        { error: "Unauthorized - please sign in" },
         { status: 401 }
       );
     }
 
     // Parse request body
-    const body = await req.json();
+    console.log("Step 2: Parsing request body...");
+    let body;
+    try {
+      body = await req.json();
+    } catch (parseError) {
+      console.error("JSON parse error:", parseError);
+      return NextResponse.json(
+        { error: "Invalid request body" },
+        { status: 400 }
+      );
+    }
+    
     const { messages } = body;
+    console.log("Messages received:", messages?.length, "messages");
 
     if (!messages || !Array.isArray(messages)) {
+      console.error("Invalid messages format:", typeof messages);
       return NextResponse.json(
         { error: "Invalid request: messages array required" },
         { status: 400 }
@@ -76,9 +105,14 @@ export async function POST(req: NextRequest) {
     }
 
     // Validate OpenAI API key
+    console.log("Step 3: Validating OpenAI API key...");
     const apiKey = process.env.OPENAI_API_KEY || process.env.OPENAI_SECRET_API_KEY;
+    console.log("API key exists:", !!apiKey);
+    console.log("API key length:", apiKey?.length);
+    console.log("API key prefix:", apiKey?.substring(0, 10));
+    
     if (!apiKey) {
-      console.error("OPENAI_API_KEY is not configured");
+      console.error("OPENAI_API_KEY is not configured in environment");
       return NextResponse.json(
         { error: "Service configuration error" },
         { status: 500 }
@@ -86,11 +120,13 @@ export async function POST(req: NextRequest) {
     }
 
     // Initialize OpenAI client
+    console.log("Step 4: Initializing OpenAI client...");
     const openai = new OpenAI({
       apiKey: apiKey,
     });
 
     // Call OpenAI API
+    console.log("Step 5: Calling OpenAI API with", messages.length, "messages...");
     const completion = await openai.chat.completions.create({
       model: "gpt-4o-mini",
       messages: [
@@ -101,16 +137,26 @@ export async function POST(req: NextRequest) {
       max_tokens: 1000,
     });
 
+    console.log("Step 6: OpenAI response received successfully");
     const reply = completion.choices[0]?.message?.content || "I'm here to listen. Could you tell me more?";
 
     return NextResponse.json({ reply });
   } catch (error) {
-    console.error("Chat API error:", error);
+    console.error("=== CHAT API ERROR ===");
+    console.error("Error caught in main try/catch:", error);
     
     // More detailed error logging
     if (error instanceof Error) {
+      console.error("Error type:", error.constructor.name);
+      console.error("Error name:", error.name);
       console.error("Error message:", error.message);
       console.error("Error stack:", error.stack);
+    }
+    
+    // Check if it's an OpenAI API error
+    if (error && typeof error === 'object' && 'status' in error) {
+      console.error("OpenAI API error status:", (error as any).status);
+      console.error("OpenAI API error details:", JSON.stringify((error as any).error));
     }
     
     return NextResponse.json(
