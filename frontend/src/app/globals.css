@@ -1,6 +1,4 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
 
 @layer base {
   :root {
@@ -23,11 +21,12 @@
 }
 
 * {
-  @apply border-border;
+  border-color: rgb(228 228 231);
 }
 
 body {
-  @apply bg-gradient-to-br from-stone-50 via-amber-50/30 to-rose-50/20 text-foreground;
+  background: linear-gradient(to bottom right, rgb(250 250 249), rgb(255 251 235 / 0.3), rgb(255 241 242 / 0.2));
+  color: rgb(20 20 20);
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -139,7 +138,10 @@ body {
 
 /* Gradient text */
 .gradient-text {
-  @apply bg-clip-text text-transparent bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500;
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  background-image: linear-gradient(to right, rgb(99 102 241), rgb(168 85 247), rgb(236 72 153));
 }
 
 /* Soft shadow */
