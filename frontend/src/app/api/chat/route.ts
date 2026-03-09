@@ -76,7 +76,8 @@ export async function POST(req: NextRequest) {
     }
 
     // Validate OpenAI API key
-    if (!process.env.OPENAI_API_KEY) {
+    const apiKey = process.env.OPENAI_API_KEY || process.env.OPENAI_SECRET_API_KEY;
+    if (!apiKey) {
       console.error("OPENAI_API_KEY is not configured");
       return NextResponse.json(
         { error: "Service configuration error" },
@@ -86,7 +87,7 @@ export async function POST(req: NextRequest) {
 
     // Initialize OpenAI client
     const openai = new OpenAI({
-      apiKey: process.env.OPENAI_API_KEY,
+      apiKey: apiKey,
     });
 
     // Call OpenAI API
@@ -106,15 +107,14 @@ export async function POST(req: NextRequest) {
   } catch (error) {
     console.error("Chat API error:", error);
     
+    // More detailed error logging
     if (error instanceof Error) {
-      return NextResponse.json(
-        { error: "Failed to process your message. Please try again." },
-        { status: 500 }
-      );
+      console.error("Error message:", error.message);
+      console.error("Error stack:", error.stack);
     }
-
+    
     return NextResponse.json(
-      { error: "An unexpected error occurred" },
+      { error: "Failed to process your message. Please try again." },
       { status: 500 }
     );
   }
