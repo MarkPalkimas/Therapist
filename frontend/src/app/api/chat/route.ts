@@ -155,8 +155,9 @@ export async function POST(req: NextRequest) {
     
     // Check if it's an OpenAI API error
     if (error && typeof error === 'object' && 'status' in error) {
-      console.error("OpenAI API error status:", (error as any).status);
-      console.error("OpenAI API error details:", JSON.stringify((error as any).error));
+      const apiError = error as { status?: number; error?: unknown };
+      console.error("OpenAI API error status:", apiError.status);
+      console.error("OpenAI API error details:", JSON.stringify(apiError.error));
     }
     
     return NextResponse.json(
