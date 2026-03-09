@@ -1,19 +1,28 @@
-import '../globals.css';
-import { ClerkProvider } from '@clerk/nextjs';
+import type { Metadata } from "next";
+import { Inter } from "next/font/google";
+import { ClerkProvider } from "@clerk/nextjs";
+import "./globals.css";
 
-export const metadata = {
-  title: 'Therapist App',
-  description: 'Therapist chatbot with Clerk auth and Stripe'
+const inter = Inter({ subsets: ["latin"] });
+
+export const metadata: Metadata = {
+  title: "Therapist AI - Your Supportive Companion",
+  description: "A safe, private space for emotional support and reflection with AI",
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+// Force dynamic rendering to avoid build-time Clerk validation
+export const dynamic = 'force-dynamic';
+
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
-    <html lang="en">
-      <body>
-        <ClerkProvider>
-          {children}
-        </ClerkProvider>
-      </body>
-    </html>
+    <ClerkProvider dynamic>
+      <html lang="en" className="dark">
+        <body className={inter.className}>{children}</body>
+      </html>
+    </ClerkProvider>
   );
 }
