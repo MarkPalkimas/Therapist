@@ -1,20 +1,22 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { Send, Loader2 } from "lucide-react";
+import { Send, Sparkles } from "lucide-react";
 
 type Message = {
   role: "user" | "assistant";
   content: string;
 };
 
+const STARTER_PROMPTS = [
+  "I feel overwhelmed today",
+  "I need help processing something",
+  "I want to reflect on my day",
+  "I feel anxious about something",
+];
+
 export default function ChatInterface() {
-  const [messages, setMessages] = useState<Message[]>([
-    {
-      role: "assistant",
-      content: "Hello. I'm here to listen and support you. What's on your mind today?",
-    },
-  ]);
+  const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -29,12 +31,19 @@ export default function ChatInterface() {
     scrollToBottom();
   }, [messages]);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    if (!input.trim() || isLoading) return;
+  useEffect(() => {
+    // Auto-resize textarea
+    if (textareaRef.current) {
+      textareaRef.current.style.height = 'auto';
+      textareaRef.current.style.height = textareaRef.current.scrollHeight + 'px';
+    }
+  }, [input]);
 
-    const userMessage = input.trim();
+  const handleSubmit = async (messageText?: string) => {
+    const userMessage = messageText || input.trim();
+    
+    if (!userMessage || isLoading) return;
+
     setInput("");
     setError(null);
 
@@ -82,88 +91,116 @@ export default function ChatInterface() {
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
-      handleSubmit(e);
+      handleSubmit();
     }
   };
 
+  const handleStarterPrompt = (prompt: string) => {
+    handleSubmit(prompt);
+  };
+
   return (
-    <div className="flex-1 flex flex-col h-full">
+    <div className="flex-1 flex flex-col h-full relative">
       {/* Messages Area */}
-      <div className="flex-1 overflow-y-auto px-6 py-8 space-y-6">
-        {messages.map((message, index) => (
-          <div
-            key={index}
-            className={`flex ${
-              message.role === "user" ? "justify-end" : "justify-start"
-            }`}
-          >
-            <div
-              className={`max-w-[80%] rounded-2xl px-5 py-3 ${
-                message.role === "user"
-                  ? "bg-blue-600 text-white"
-                  : "bg-neutral-800 text-neutral-100"
-              }`}
-            >
-              <p className="whitespace-pre-wrap leading-relaxed">
-                {message.content}
-              </p>
+      <div className="flex-1 overflow-y-auto px-6 py-8">
+        <div className="max-w-3xl mx-auto space-y-6">
+          {messages.length === 0 ? (
+            <div className="flex flex-col items-center justify-center min-h-[60vh] space-y-8">
+              <div className="text-center space-y-4">
+                <div className="w-16 h-16 mx-auto bg-white/5 rounded-full flex items-center justify-center">
+                  <Sparkles className="w-8 h-8 text-white/40" />
+                </div>
+                <h2 className="text-2xl font-light text-white/90">How are you feeling?</h2>
+                <p className="text-white/40 text-sm max-w-md">
+                  Share what&apos;s on your mind, or choose a prompt below to get started
+                </p>
+              </div>
+              
+              {/* Starter Prompts */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3 w-full max-w-2xl">
+                {STARTER_PROMPTS.map((prompt, index) => (
+                  <button
+                    key={index}
+                    onClick={() => handleStarterPrompt(prompt)}
+                    className="px-6 py-4 bg-white/5 hover:bg-white/10 border border-white/10 rounded-2xl text-left text-white/70 hover:text-white/90 transition-all text-sm"
+                  >
+                    {prompt}
+                  </button>
+                ))}
+              </div>
             </div>
-          </div>
-        ))}
-        
-        {isLoading && (
-          <div className="flex justify-start">
-            <div className="bg-neutral-800 rounded-2xl px-5 py-3 flex items-center gap-2">
-              <Loader2 className="w-4 h-4 animate-spin text-neutral-400" />
-              <span className="text-neutral-400 text-sm">Thinking...</span>
-            </div>
-          </div>
-        )}
+          ) : (
+            <>
+              {messages.map((message, index) => (
+                <div
+                  key={index}
+                  className={`flex ${
+                    message.role === "user" ? "justify-end" : "justify-start"
+                  } animate-in fade-in slide-in-from-bottom-4 duration-500`}
+                >
+                  <div
+                    className={`max-w-[85%] rounded-3xl px-6 py-4 ${
+                      message.role === "user"
+                        ? "bg-white/10 text-white/90 backdrop-blur-sm"
+                        : "bg-white/5 text-white/80 border border-white/10"
+                    }`}
+                  >
+                    <p className="whitespace-pre-wrap leading-relaxed text-[15px]">
+                      {message.content}
+                    </p>
+                  </div>
+                </div>
+              ))}
+              
+              {isLoading && (
+                <div className="flex justify-start animate-in fade-in duration-300">
+                  <div className="bg-white/5 border border-white/10 rounded-3xl px-6 py-4 flex items-center gap-3">
+                    <div className="flex gap-1">
+                      <div className="w-2 h-2 bg-white/40 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
+                      <div className="w-2 h-2 bg-white/40 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
+                      <div className="w-2 h-2 bg-white/40 rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
+                    </div>
+                  </div>
+                </div>
+              )}
 
-        {error && (
-          <div className="flex justify-center">
-            <div className="bg-red-900/20 border border-red-800 rounded-lg px-4 py-2 text-red-400 text-sm">
-              {error}
-            </div>
-          </div>
-        )}
+              {error && (
+                <div className="flex justify-center">
+                  <div className="bg-red-500/10 border border-red-500/20 rounded-2xl px-5 py-3 text-red-400/90 text-sm">
+                    {error}
+                  </div>
+                </div>
+              )}
+            </>
+          )}
 
-        <div ref={messagesEndRef} />
+          <div ref={messagesEndRef} />
+        </div>
       </div>
 
       {/* Input Area */}
-      <div className="border-t border-neutral-800 bg-neutral-900/50 px-6 py-4">
-        <form onSubmit={handleSubmit} className="max-w-4xl mx-auto">
-          <div className="flex gap-3 items-end">
-            <div className="flex-1 relative">
-              <textarea
-                ref={textareaRef}
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-                onKeyDown={handleKeyDown}
-                placeholder="Share what's on your mind..."
-                rows={1}
-                className="w-full bg-neutral-800 text-neutral-100 rounded-xl px-4 py-3 pr-12 resize-none focus:outline-none focus:ring-2 focus:ring-blue-600 placeholder-neutral-500"
-                style={{
-                  minHeight: "48px",
-                  maxHeight: "200px",
-                }}
-              />
-            </div>
+      <div className="border-t border-white/5 bg-[#0f0f0f]/80 backdrop-blur-md px-6 py-6">
+        <form onSubmit={(e) => { e.preventDefault(); handleSubmit(); }} className="max-w-3xl mx-auto">
+          <div className="flex gap-3 items-end bg-white/5 rounded-3xl p-2 border border-white/10 focus-within:border-white/20 transition-colors">
+            <textarea
+              ref={textareaRef}
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              onKeyDown={handleKeyDown}
+              placeholder="Share what's on your mind..."
+              rows={1}
+              className="flex-1 bg-transparent text-white/90 placeholder-white/30 px-4 py-3 resize-none focus:outline-none text-[15px] max-h-32"
+            />
             <button
               type="submit"
               disabled={!input.trim() || isLoading}
-              className="flex-shrink-0 bg-blue-600 hover:bg-blue-700 disabled:bg-neutral-700 disabled:cursor-not-allowed text-white rounded-xl p-3 transition"
+              className="flex-shrink-0 bg-white/10 hover:bg-white/15 disabled:bg-white/5 disabled:cursor-not-allowed text-white/90 disabled:text-white/30 rounded-full p-3 transition-all"
             >
-              {isLoading ? (
-                <Loader2 className="w-5 h-5 animate-spin" />
-              ) : (
-                <Send className="w-5 h-5" />
-              )}
+              <Send className="w-5 h-5" />
             </button>
           </div>
-          <p className="text-xs text-neutral-500 mt-2 text-center">
-            Press Enter to send, Shift + Enter for new line
+          <p className="text-xs text-white/30 mt-3 text-center font-light">
+            Press Enter to send • Shift + Enter for new line
           </p>
         </form>
       </div>
