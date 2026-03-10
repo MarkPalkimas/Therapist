@@ -1,6 +1,7 @@
 import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import ChatInterface from "@/components/ChatInterface";
+import ThemeSwitcher from "@/components/ThemeSwitcher";
 import { UserButton } from "@clerk/nextjs";
 import { Heart } from "lucide-react";
 
@@ -14,31 +15,34 @@ export default async function ChatPage() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col bg-gradient-to-br from-stone-50 via-amber-50/30 to-rose-50/20">
+    <div className="min-h-screen flex flex-col bg-[rgb(var(--background))] transition-colors duration-300">
       {/* Header */}
-      <header className="glass border-b border-stone-200/50 sticky top-0 z-10">
+      <header className="bg-[rgb(var(--card))] border-b border-[rgb(var(--border))] sticky top-0 z-10 shadow-sm">
         <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center shadow-lg shadow-indigo-500/25">
-              <Heart className="w-5 h-5 text-white" />
+            <div className="w-10 h-10 rounded-xl bg-[rgb(var(--primary))] flex items-center justify-center shadow-sm">
+              <Heart className="w-5 h-5 text-[rgb(var(--primary-foreground))]" />
             </div>
             <div>
-              <h1 className="text-lg font-semibold text-stone-900">Therapist</h1>
-              <p className="text-xs text-stone-500">Your safe space</p>
+              <h1 className="text-lg font-semibold text-[rgb(var(--foreground))]">Therapist</h1>
+              <p className="text-xs text-[rgb(var(--muted-foreground))]">Your safe space</p>
             </div>
           </div>
-          <UserButton 
-            afterSignOutUrl="/"
-            appearance={{
-              elements: {
-                avatarBox: "w-10 h-10 rounded-xl shadow-md",
-                userButtonPopoverCard: "glass rounded-2xl shadow-xl border border-stone-200/50",
-                userButtonPopoverActionButton: "hover:bg-stone-100 rounded-xl transition-colors",
-                userButtonPopoverActionButtonText: "text-stone-700",
-                userButtonPopoverFooter: "hidden",
-              }
-            }}
-          />
+          <div className="flex items-center gap-3">
+            <ThemeSwitcher />
+            <UserButton 
+              afterSignOutUrl="/"
+              appearance={{
+                elements: {
+                  avatarBox: "w-10 h-10 rounded-xl shadow-sm",
+                  userButtonPopoverCard: "bg-[rgb(var(--card))] rounded-2xl shadow-xl border border-[rgb(var(--border))]",
+                  userButtonPopoverActionButton: "hover:bg-[rgb(var(--secondary))] rounded-xl transition-colors",
+                  userButtonPopoverActionButtonText: "text-[rgb(var(--foreground))]",
+                  userButtonPopoverFooter: "hidden",
+                }
+              }}
+            />
+          </div>
         </div>
       </header>
 
@@ -48,9 +52,9 @@ export default async function ChatPage() {
       </main>
 
       {/* Footer Disclaimer */}
-      <footer className="glass border-t border-stone-200/50 py-3">
-        <p className="text-center text-xs text-stone-500 px-4">
-          Not a licensed therapist • In crisis, call <span className="font-semibold text-stone-700">988</span> or emergency services
+      <footer className="bg-[rgb(var(--card))] border-t border-[rgb(var(--border))] py-3">
+        <p className="text-center text-xs text-[rgb(var(--muted-foreground))] px-4">
+          Not a licensed therapist • In crisis, call <span className="font-semibold text-[rgb(var(--foreground))]">988</span> or emergency services
         </p>
       </footer>
     </div>
