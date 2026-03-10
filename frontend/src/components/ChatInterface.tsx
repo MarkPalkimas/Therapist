@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { Send, Loader2, Heart } from "lucide-react";
+import { Send, Sparkles, Loader2 } from "lucide-react";
 
 type Message = {
   role: "user" | "assistant";
@@ -9,10 +9,10 @@ type Message = {
 };
 
 const STARTER_PROMPTS = [
-  "I feel overwhelmed",
-  "I need help thinking something through",
-  "I want to reflect on my day",
-  "I feel anxious",
+  { text: "I feel overwhelmed today", emoji: "😔" },
+  { text: "I need help processing something", emoji: "💭" },
+  { text: "I want to reflect on my day", emoji: "✨" },
+  { text: "I feel anxious about something", emoji: "😰" },
 ];
 
 export default function ChatInterface() {
@@ -98,21 +98,19 @@ export default function ChatInterface() {
   };
 
   return (
-    <div className="flex-1 flex flex-col h-full relative">
+    <div className="flex-1 flex flex-col h-full relative bg-gradient-to-br from-stone-50 via-amber-50/30 to-rose-50/20">
       {/* Messages Area */}
       <div className="flex-1 overflow-y-auto px-6 py-8">
         <div className="max-w-4xl mx-auto space-y-6">
           {messages.length === 0 ? (
-            <div className="flex flex-col items-center justify-center min-h-[60vh] space-y-10 animate-fade-in">
-              <div className="text-center space-y-4 max-w-xl">
-                <div className="w-20 h-20 mx-auto bg-[rgb(139,116,95)] rounded-3xl flex items-center justify-center warm-glow">
-                  <Heart className="w-10 h-10 text-[rgb(255,253,250)]" />
+            <div className="flex flex-col items-center justify-center min-h-[60vh] space-y-8 animate-fade-in">
+              <div className="text-center space-y-4">
+                <div className="w-20 h-20 mx-auto bg-gradient-to-br from-indigo-500 to-purple-600 rounded-3xl flex items-center justify-center shadow-xl shadow-indigo-500/25 animate-scale-in">
+                  <Sparkles className="w-10 h-10 text-white" />
                 </div>
-                <h2 className="text-3xl font-semibold text-[rgb(62,56,48)]">
-                  What&apos;s been on your mind today?
-                </h2>
-                <p className="text-lg text-[rgb(139,116,95)] leading-relaxed">
-                  This is a safe space. Share whatever feels right.
+                <h2 className="text-3xl font-bold text-stone-900">How are you feeling today?</h2>
+                <p className="text-stone-600 text-lg max-w-md">
+                  Share what&apos;s on your mind, or choose a prompt below to get started
                 </p>
               </div>
               
@@ -121,13 +119,16 @@ export default function ChatInterface() {
                 {STARTER_PROMPTS.map((prompt, index) => (
                   <button
                     key={index}
-                    onClick={() => handleStarterPrompt(prompt)}
-                    className="cozy-card px-6 py-5 rounded-2xl text-left"
+                    onClick={() => handleStarterPrompt(prompt.text)}
+                    className="glass px-6 py-5 rounded-2xl text-left hover-lift transition-smooth group"
                     style={{ animationDelay: `${index * 0.1}s` }}
                   >
-                    <span className="text-[rgb(62,56,48)] font-medium">
-                      {prompt}
-                    </span>
+                    <div className="flex items-start gap-3">
+                      <span className="text-2xl">{prompt.emoji}</span>
+                      <span className="text-stone-700 group-hover:text-stone-900 font-medium">
+                        {prompt.text}
+                      </span>
+                    </div>
                   </button>
                 ))}
               </div>
@@ -139,17 +140,17 @@ export default function ChatInterface() {
                   key={index}
                   className={`flex ${
                     message.role === "user" ? "justify-end" : "justify-start"
-                  } animate-slide-in`}
+                  } animate-slide-in-right`}
                   style={{ animationDelay: `${index * 0.05}s` }}
                 >
                   <div
-                    className={`max-w-[85%] ${
+                    className={`max-w-[85%] rounded-3xl px-6 py-4 ${
                       message.role === "user"
-                        ? "message-user"
-                        : "message-assistant"
+                        ? "bg-gradient-to-br from-indigo-500 to-purple-600 text-white shadow-lg shadow-indigo-500/25"
+                        : "glass text-stone-800 soft-shadow"
                     }`}
                   >
-                    <p className="whitespace-pre-wrap leading-relaxed">
+                    <p className="whitespace-pre-wrap leading-relaxed text-[15px]">
                       {message.content}
                     </p>
                   </div>
@@ -158,9 +159,9 @@ export default function ChatInterface() {
               
               {isLoading && (
                 <div className="flex justify-start animate-fade-in">
-                  <div className="cozy-card rounded-3xl px-6 py-4 flex items-center gap-3">
-                    <Loader2 className="w-5 h-5 text-[rgb(139,116,95)] animate-spin" />
-                    <span className="text-[rgb(139,116,95)] text-sm font-medium">Listening...</span>
+                  <div className="glass rounded-3xl px-6 py-4 flex items-center gap-3 soft-shadow">
+                    <Loader2 className="w-5 h-5 text-indigo-500 animate-spin" />
+                    <span className="text-stone-600 text-sm font-medium">Thinking...</span>
                   </div>
                 </div>
               )}
@@ -180,9 +181,9 @@ export default function ChatInterface() {
       </div>
 
       {/* Input Area */}
-      <div className="border-t border-[rgb(230,224,216)] bg-[rgb(255,253,250)]/80 backdrop-blur-sm px-6 py-6">
+      <div className="border-t border-stone-200/50 glass px-6 py-6">
         <form onSubmit={(e) => { e.preventDefault(); handleSubmit(); }} className="max-w-4xl mx-auto">
-          <div className="flex gap-3 items-end cozy-card rounded-3xl p-3">
+          <div className="flex gap-3 items-end bg-white rounded-3xl p-3 soft-shadow border border-stone-200/50 focus-within:border-indigo-300 focus-within:shadow-lg focus-within:shadow-indigo-500/10 transition-all">
             <textarea
               ref={textareaRef}
               value={input}
@@ -190,18 +191,18 @@ export default function ChatInterface() {
               onKeyDown={handleKeyDown}
               placeholder="Share what's on your mind..."
               rows={1}
-              className="flex-1 bg-transparent text-[rgb(62,56,48)] placeholder-[rgb(156,148,138)] px-3 py-2 resize-none focus:outline-none"
+              className="flex-1 bg-transparent text-stone-900 placeholder-stone-400 px-3 py-2 resize-none focus:outline-none text-[15px]"
               style={{ maxHeight: '150px' }}
             />
             <button
               type="submit"
               disabled={!input.trim() || isLoading}
-              className="flex-shrink-0 bg-[rgb(139,116,95)] hover:bg-[rgb(168,145,122)] disabled:bg-[rgb(156,148,138)] disabled:cursor-not-allowed text-[rgb(255,253,250)] rounded-2xl p-3 transition-all"
+              className="flex-shrink-0 bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 disabled:from-stone-300 disabled:to-stone-400 disabled:cursor-not-allowed text-white rounded-2xl p-3 transition-all shadow-lg shadow-indigo-500/25 hover:shadow-xl hover:shadow-indigo-500/30 hover:scale-105"
             >
               <Send className="w-5 h-5" />
             </button>
           </div>
-          <p className="text-xs text-[rgb(156,148,138)] mt-3 text-center">
+          <p className="text-xs text-stone-500 mt-3 text-center">
             Press Enter to send • Shift + Enter for new line
           </p>
         </form>

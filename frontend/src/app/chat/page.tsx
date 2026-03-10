@@ -14,27 +14,27 @@ export default async function ChatPage() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col bg-gradient-to-br from-[rgb(250,248,245)] to-[rgb(248,244,238)]">
+    <div className="min-h-screen flex flex-col bg-gradient-to-br from-stone-50 via-amber-50/30 to-rose-50/20">
       {/* Header */}
-      <header className="bg-[rgb(255,253,250)]/80 backdrop-blur-sm border-b border-[rgb(230,224,216)] sticky top-0 z-10">
+      <header className="glass border-b border-stone-200/50 sticky top-0 z-10">
         <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-2xl bg-[rgb(139,116,95)] flex items-center justify-center">
-              <Heart className="w-5 h-5 text-[rgb(255,253,250)]" />
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center shadow-lg shadow-indigo-500/25">
+              <Heart className="w-5 h-5 text-white" />
             </div>
             <div>
-              <h1 className="text-lg font-semibold text-[rgb(62,56,48)]">Therapist</h1>
-              <p className="text-xs text-[rgb(156,148,138)]">Your quiet space</p>
+              <h1 className="text-lg font-semibold text-stone-900">Therapist</h1>
+              <p className="text-xs text-stone-500">Your safe space</p>
             </div>
           </div>
           <UserButton 
             afterSignOutUrl="/"
             appearance={{
               elements: {
-                avatarBox: "w-10 h-10 rounded-2xl",
-                userButtonPopoverCard: "cozy-card rounded-2xl shadow-xl",
-                userButtonPopoverActionButton: "hover:bg-[rgb(248,244,238)] rounded-xl transition-colors",
-                userButtonPopoverActionButtonText: "text-[rgb(62,56,48)]",
+                avatarBox: "w-10 h-10 rounded-xl shadow-md",
+                userButtonPopoverCard: "glass rounded-2xl shadow-xl border border-stone-200/50",
+                userButtonPopoverActionButton: "hover:bg-stone-100 rounded-xl transition-colors",
+                userButtonPopoverActionButtonText: "text-stone-700",
                 userButtonPopoverFooter: "hidden",
               }
             }}
@@ -48,9 +48,9 @@ export default async function ChatPage() {
       </main>
 
       {/* Footer Disclaimer */}
-      <footer className="bg-[rgb(255,253,250)]/80 backdrop-blur-sm border-t border-[rgb(230,224,216)] py-3">
-        <p className="text-center text-xs text-[rgb(156,148,138)] px-4">
-          Not a licensed therapist • In crisis, call <span className="font-semibold text-[rgb(139,116,95)]">988</span> or emergency services
+      <footer className="glass border-t border-stone-200/50 py-3">
+        <p className="text-center text-xs text-stone-500 px-4">
+          Not a licensed therapist • In crisis, call <span className="font-semibold text-stone-700">988</span> or emergency services
         </p>
       </footer>
     </div>

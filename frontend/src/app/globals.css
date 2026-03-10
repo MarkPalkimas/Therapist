@@ -2,52 +2,55 @@
 
 @layer base {
   :root {
-    /* Warm Cozy Therapist Theme */
-    --background: 250 248 245;
-    --foreground: 62 56 48;
-    --card: 255 253 250;
-    --card-secondary: 248 244 238;
-    --primary: 139 116 95;
-    --primary-light: 168 145 122;
-    --accent: 184 134 98;
-    --muted: 156 148 138;
-    --border: 230 224 216;
-    --shadow: 62 56 48;
+    --background: 250 250 250;
+    --foreground: 20 20 20;
+    --card: 255 255 255;
+    --card-foreground: 20 20 20;
+    --primary: 99 102 241;
+    --primary-foreground: 255 255 255;
+    --secondary: 244 244 245;
+    --secondary-foreground: 20 20 20;
+    --muted: 244 244 245;
+    --muted-foreground: 113 113 122;
+    --accent: 244 244 245;
+    --accent-foreground: 20 20 20;
+    --border: 228 228 231;
+    --input: 228 228 231;
+    --ring: 99 102 241;
   }
 }
 
 * {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+  border-color: rgb(228 228 231);
 }
 
 body {
-  background: linear-gradient(135deg, rgb(250 248 245) 0%, rgb(248 244 238) 100%);
-  color: rgb(62 56 48);
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+  background: linear-gradient(to bottom right, rgb(250 250 249), rgb(255 251 235 / 0.3), rgb(255 241 242 / 0.2));
+  color: rgb(20 20 20);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  line-height: 1.6;
+  font-feature-settings: 'rlig' 1, 'calt' 1;
 }
 
 /* Custom scrollbar */
 ::-webkit-scrollbar {
-  width: 12px;
+  width: 10px;
+  height: 10px;
 }
 
 ::-webkit-scrollbar-track {
-  background: rgb(248 244 238);
+  background: rgb(250 250 250 / 0.5);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgb(184 134 98 / 0.3);
-  border-radius: 6px;
-  border: 3px solid rgb(248 244 238);
+  background: rgb(212 212 216 / 0.8);
+  border-radius: 5px;
+  border: 2px solid rgb(250 250 250 / 0.5);
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgb(184 134 98 / 0.5);
+  background: rgb(161 161 170 / 0.9);
 }
 
 /* Smooth animations */
@@ -62,7 +65,7 @@ body {
 
 @keyframes slide-up {
   from {
-    transform: translateY(30px);
+    transform: translateY(20px);
     opacity: 0;
   }
   to {
@@ -71,7 +74,7 @@ body {
   }
 }
 
-@keyframes slide-in {
+@keyframes slide-in-right {
   from {
     transform: translateX(-20px);
     opacity: 0;
@@ -82,112 +85,84 @@ body {
   }
 }
 
-@keyframes glow {
-  0%, 100% {
-    opacity: 0.5;
+@keyframes scale-in {
+  from {
+    transform: scale(0.95);
+    opacity: 0;
   }
-  50% {
-    opacity: 0.8;
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -1000px 0;
+  }
+  100% {
+    background-position: 1000px 0;
   }
 }
 
 .animate-fade-in {
-  animation: fade-in 0.6s ease-out;
+  animation: fade-in 0.5s ease-out;
 }
 
 .animate-slide-up {
-  animation: slide-up 0.7s ease-out;
+  animation: slide-up 0.6s ease-out;
 }
 
-.animate-slide-in {
-  animation: slide-in 0.5s ease-out;
+.animate-slide-in-right {
+  animation: slide-in-right 0.5s ease-out;
 }
 
-/* Cozy card effect */
-.cozy-card {
-  background: rgb(255 253 250);
-  border: 1px solid rgb(230 224 216);
-  box-shadow: 
-    0 2px 8px rgb(62 56 48 / 0.04),
-    0 1px 3px rgb(62 56 48 / 0.06);
-  transition: all 0.3s ease;
+.animate-scale-in {
+  animation: scale-in 0.4s ease-out;
 }
 
-.cozy-card:hover {
-  box-shadow: 
-    0 4px 16px rgb(62 56 48 / 0.06),
-    0 2px 6px rgb(62 56 48 / 0.08);
-  transform: translateY(-2px);
+/* Glass morphism effect */
+.glass {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
 }
 
-/* Warm glow effect */
-.warm-glow {
-  box-shadow: 
-    0 4px 20px rgb(184 134 98 / 0.15),
-    0 2px 8px rgb(184 134 98 / 0.1);
+.glass-dark {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-/* Soft button */
-.soft-button {
-  background: rgb(139 116 95);
-  color: rgb(255 253 250);
-  border: none;
-  padding: 0.75rem 1.5rem;
-  border-radius: 12px;
-  font-weight: 500;
-  transition: all 0.3s ease;
-  box-shadow: 
-    0 2px 8px rgb(139 116 95 / 0.2),
-    0 1px 3px rgb(139 116 95 / 0.3);
+/* Gradient text */
+.gradient-text {
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  background-image: linear-gradient(to right, rgb(99 102 241), rgb(168 85 247), rgb(236 72 153));
 }
 
-.soft-button:hover {
-  background: rgb(168 145 122);
-  transform: translateY(-1px);
-  box-shadow: 
-    0 4px 12px rgb(139 116 95 / 0.25),
-    0 2px 6px rgb(139 116 95 / 0.35);
+/* Soft shadow */
+.soft-shadow {
+  box-shadow: 0 4px 24px -2px rgba(0, 0, 0, 0.08), 0 2px 8px -2px rgba(0, 0, 0, 0.04);
 }
 
-.soft-button:disabled {
-  background: rgb(156 148 138);
-  cursor: not-allowed;
-  transform: none;
-  box-shadow: none;
-}
-
-/* Message bubbles */
-.message-user {
-  background: rgb(139 116 95);
-  color: rgb(255 253 250);
-  border-radius: 20px 20px 4px 20px;
-  padding: 1rem 1.25rem;
-  box-shadow: 
-    0 2px 8px rgb(139 116 95 / 0.2),
-    0 1px 3px rgb(139 116 95 / 0.15);
-}
-
-.message-assistant {
-  background: rgb(255 253 250);
-  color: rgb(62 56 48);
-  border: 1px solid rgb(230 224 216);
-  border-radius: 20px 20px 20px 4px;
-  padding: 1rem 1.25rem;
-  box-shadow: 
-    0 2px 8px rgb(62 56 48 / 0.04),
-    0 1px 3px rgb(62 56 48 / 0.06);
+.soft-shadow-lg {
+  box-shadow: 0 8px 32px -4px rgba(0, 0, 0, 0.1), 0 4px 16px -4px rgba(0, 0, 0, 0.06);
 }
 
 /* Focus states */
 *:focus-visible {
-  outline: 2px solid rgb(184 134 98 / 0.5);
+  outline: 2px solid rgb(99 102 241 / 0.5);
   outline-offset: 2px;
 }
 
 /* Selection */
 ::selection {
-  background: rgb(184 134 98 / 0.2);
-  color: rgb(62 56 48);
+  background: rgb(99 102 241 / 0.2);
+  color: rgb(20 20 20);
 }
 
 /* Smooth transitions */
@@ -195,73 +170,23 @@ body {
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Warm overlay */
-.warm-overlay {
-  background: linear-gradient(
-    135deg,
-    rgb(250 248 245 / 0.95) 0%,
-    rgb(248 244 238 / 0.95) 100%
+/* Hover lift effect */
+.hover-lift {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.hover-lift:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 40px -8px rgba(0, 0, 0, 0.12);
+}
+
+/* Shimmer effect for loading */
+.shimmer {
+  background: linear-gradient(90deg, 
+    rgba(255, 255, 255, 0) 0%, 
+    rgba(255, 255, 255, 0.4) 50%, 
+    rgba(255, 255, 255, 0) 100%
   );
-  backdrop-filter: blur(8px);
-}
-
-/* Fireplace glow animation */
-@keyframes fireplace-glow {
-  0%, 100% {
-    box-shadow: 
-      0 0 20px rgb(184 134 98 / 0.1),
-      0 0 40px rgb(184 134 98 / 0.05);
-  }
-  50% {
-    box-shadow: 
-      0 0 30px rgb(184 134 98 / 0.15),
-      0 0 60px rgb(184 134 98 / 0.08);
-  }
-}
-
-.fireplace-glow {
-  animation: fireplace-glow 4s ease-in-out infinite;
-}
-
-/* Comfortable spacing */
-.comfortable-spacing {
-  padding: 2rem;
-}
-
-@media (min-width: 768px) {
-  .comfortable-spacing {
-    padding: 3rem;
-  }
-}
-
-/* Cozy input */
-.cozy-input {
-  background: rgb(255 253 250);
-  border: 1.5px solid rgb(230 224 216);
-  border-radius: 16px;
-  padding: 1rem 1.25rem;
-  color: rgb(62 56 48);
-  transition: all 0.3s ease;
-}
-
-.cozy-input:focus {
-  border-color: rgb(184 134 98);
-  box-shadow: 
-    0 0 0 3px rgb(184 134 98 / 0.1),
-    0 2px 8px rgb(184 134 98 / 0.15);
-}
-
-.cozy-input::placeholder {
-  color: rgb(156 148 138);
-}
-
-/* Warm divider */
-.warm-divider {
-  height: 1px;
-  background: linear-gradient(
-    90deg,
-    transparent 0%,
-    rgb(230 224 216) 50%,
-    transparent 100%
-  );
+  background-size: 1000px 100%;
+  animation: shimmer 2s infinite;
 }
