@@ -1,37 +1,37 @@
 import Link from "next/link";
 import { SignInButton, SignUpButton, SignedIn, SignedOut } from "@clerk/nextjs";
-import { Sparkles, Shield, Clock, Heart, ArrowRight, MessageCircle } from "lucide-react";
+import { MessageCircle, Shield, Clock, Heart } from "lucide-react";
 
 export const dynamic = 'force-dynamic';
 
 export default function LandingPage() {
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen bg-gradient-to-br from-[rgb(250,248,245)] to-[rgb(248,244,238)]">
       {/* Navigation */}
-      <nav className="fixed top-0 w-full z-50 glass border-b border-stone-200/50">
-        <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center">
-              <Heart className="w-4 h-4 text-white" />
+      <nav className="fixed top-0 w-full z-50 bg-[rgb(255,253,250)]/80 backdrop-blur-sm border-b border-[rgb(230,224,216)]">
+        <div className="max-w-6xl mx-auto px-6 py-4 flex justify-between items-center">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-2xl bg-[rgb(139,116,95)] flex items-center justify-center">
+              <Heart className="w-5 h-5 text-[rgb(255,253,250)]" />
             </div>
-            <span className="text-lg font-semibold text-stone-900">Therapist</span>
+            <span className="text-xl font-medium text-[rgb(62,56,48)]">Therapist</span>
           </div>
           <div className="flex gap-3">
             <SignedOut>
               <SignInButton mode="modal">
-                <button className="px-5 py-2 text-stone-600 hover:text-stone-900 transition-colors text-sm font-medium">
+                <button className="px-5 py-2.5 text-[rgb(139,116,95)] hover:text-[rgb(168,145,122)] transition-colors font-medium">
                   Sign In
                 </button>
               </SignInButton>
               <SignUpButton mode="modal">
-                <button className="px-6 py-2.5 bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white rounded-xl transition-all text-sm font-medium shadow-lg shadow-indigo-500/25 hover-lift">
+                <button className="soft-button">
                   Get Started
                 </button>
               </SignUpButton>
             </SignedOut>
             <SignedIn>
               <Link href="/chat">
-                <button className="px-6 py-2.5 bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white rounded-xl transition-all text-sm font-medium shadow-lg shadow-indigo-500/25 hover-lift">
+                <button className="soft-button">
                   Open App
                 </button>
               </Link>
@@ -41,133 +41,120 @@ export default function LandingPage() {
       </nav>
 
       {/* Hero Section */}
-      <section className="pt-32 pb-20 px-6 relative overflow-hidden">
-        {/* Background decoration */}
-        <div className="absolute inset-0 -z-10">
-          <div className="absolute top-20 left-10 w-72 h-72 bg-purple-300/20 rounded-full blur-3xl"></div>
-          <div className="absolute top-40 right-10 w-96 h-96 bg-indigo-300/20 rounded-full blur-3xl"></div>
-          <div className="absolute bottom-20 left-1/3 w-80 h-80 bg-pink-300/20 rounded-full blur-3xl"></div>
-        </div>
-
-        <div className="max-w-5xl mx-auto text-center relative">
-          <div className="inline-flex items-center gap-2 px-4 py-2 bg-white/80 backdrop-blur-sm rounded-full border border-stone-200/50 mb-8 animate-slide-up">
-            <Sparkles className="w-4 h-4 text-indigo-500" />
-            <span className="text-sm text-stone-600 font-medium">Your personal space for reflection</span>
+      <section className="pt-32 pb-20 px-6">
+        <div className="max-w-4xl mx-auto text-center">
+          <div className="animate-slide-up">
+            <h1 className="text-5xl md:text-6xl font-semibold text-[rgb(62,56,48)] mb-6 leading-tight">
+              A quiet place to talk
+              <br />
+              things through
+            </h1>
           </div>
           
-          <h1 className="text-6xl md:text-7xl font-bold text-stone-900 mb-6 leading-tight tracking-tight animate-slide-up" style={{ animationDelay: '0.1s' }}>
-            A calm space to
-            <br />
-            <span className="gradient-text">talk things through</span>
-          </h1>
+          <div className="animate-slide-up" style={{ animationDelay: '0.1s' }}>
+            <p className="text-xl text-[rgb(139,116,95)] mb-10 max-w-2xl mx-auto leading-relaxed">
+              Private AI conversations designed to help you slow down, reflect, and make sense of what you&apos;re feeling.
+            </p>
+          </div>
           
-          <p className="text-xl text-stone-600 mb-10 max-w-2xl mx-auto leading-relaxed animate-slide-up" style={{ animationDelay: '0.2s' }}>
-            Private, thoughtful conversations with an AI companion designed to help you process emotions, reflect on your day, and find clarity.
-          </p>
-          
-          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center animate-slide-up" style={{ animationDelay: '0.3s' }}>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center animate-slide-up" style={{ animationDelay: '0.2s' }}>
             <SignedOut>
               <SignUpButton mode="modal">
-                <button className="px-8 py-4 bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white rounded-xl transition-all text-base font-semibold shadow-xl shadow-indigo-500/30 hover-lift flex items-center gap-2">
-                  Start Talking
-                  <ArrowRight className="w-5 h-5" />
+                <button className="soft-button text-lg px-8 py-4">
+                  Start a Conversation
                 </button>
               </SignUpButton>
             </SignedOut>
             <SignedIn>
               <Link href="/chat">
-                <button className="px-8 py-4 bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white rounded-xl transition-all text-base font-semibold shadow-xl shadow-indigo-500/30 hover-lift flex items-center gap-2">
+                <button className="soft-button text-lg px-8 py-4">
                   Continue
-                  <ArrowRight className="w-5 h-5" />
                 </button>
               </Link>
             </SignedIn>
-            <button className="px-8 py-4 bg-white/80 backdrop-blur-sm hover:bg-white text-stone-700 rounded-xl transition-all text-base font-semibold border border-stone-200/50 hover-lift">
-              Learn More
-            </button>
           </div>
         </div>
       </section>
 
       {/* Features Section */}
-      <section className="py-24 px-6 relative">
-        <div className="max-w-6xl mx-auto">
+      <section className="py-20 px-6">
+        <div className="max-w-5xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-stone-900 mb-4">Why choose Therapist?</h2>
-            <p className="text-lg text-stone-600 max-w-2xl mx-auto">
-              A safe, supportive space designed with your wellbeing in mind
+            <h2 className="text-3xl font-semibold text-[rgb(62,56,48)] mb-4">
+              Why reflection helps
+            </h2>
+            <p className="text-lg text-[rgb(139,116,95)] max-w-2xl mx-auto">
+              A safe space designed with your wellbeing in mind
             </p>
           </div>
           
           <div className="grid md:grid-cols-3 gap-8">
             <FeatureCard
-              icon={<Shield className="w-6 h-6" />}
-              title="Private & Secure"
-              description="Your conversations are encrypted and never shared. Complete privacy guaranteed."
-              gradient="from-blue-500 to-cyan-500"
+              icon={<Shield className="w-7 h-7" />}
+              title="Private & Safe"
+              description="Your conversations are completely private. A secure space just for you."
             />
             <FeatureCard
-              icon={<Clock className="w-6 h-6" />}
-              title="Always Available"
-              description="24/7 support whenever you need someone to talk to. No appointments, no waiting."
-              gradient="from-purple-500 to-pink-500"
+              icon={<Clock className="w-7 h-7" />}
+              title="Always Here"
+              description="Available whenever you need to talk. No appointments, no waiting."
             />
             <FeatureCard
-              icon={<MessageCircle className="w-6 h-6" />}
-              title="Thoughtful Responses"
-              description="Trained to listen, reflect, and help you process complex emotions with care."
-              gradient="from-indigo-500 to-purple-500"
+              icon={<MessageCircle className="w-7 h-7" />}
+              title="Thoughtful Listening"
+              description="Designed to help you process emotions and find clarity through reflection."
             />
           </div>
         </div>
       </section>
 
-      {/* How It Works */}
-      <section className="py-24 px-6 bg-gradient-to-br from-indigo-50/50 to-purple-50/30 relative">
-        <div className="max-w-5xl mx-auto">
+      {/* How Conversations Work */}
+      <section className="py-20 px-6 bg-[rgb(248,244,238)]/50">
+        <div className="max-w-4xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-stone-900 mb-4">How it works</h2>
-            <p className="text-lg text-stone-600">Simple, supportive, and designed for you</p>
+            <h2 className="text-3xl font-semibold text-[rgb(62,56,48)] mb-4">
+              How conversations work
+            </h2>
           </div>
           
-          <div className="space-y-8">
+          <div className="space-y-6">
             <StepCard
               number="1"
-              title="Create your account"
-              description="Sign up in seconds and enter your private space"
+              title="Sit down and start"
+              description="Create your account and enter your private space"
             />
             <StepCard
               number="2"
-              title="Start the conversation"
-              description="Share what's on your mind or choose from thoughtful prompts"
+              title="Share what's on your mind"
+              description="Talk about anything—there's no judgment here"
             />
             <StepCard
               number="3"
-              title="Reflect and grow"
-              description="Gain insights, process emotions, and find clarity through supportive dialogue"
+              title="Reflect and understand"
+              description="Gain insights and clarity through supportive dialogue"
             />
           </div>
         </div>
       </section>
 
       {/* Trust Section */}
-      <section className="py-24 px-6">
-        <div className="max-w-4xl mx-auto">
-          <div className="glass rounded-3xl p-12 text-center soft-shadow-lg">
-            <div className="w-16 h-16 bg-gradient-to-br from-amber-400 to-orange-500 rounded-2xl flex items-center justify-center mx-auto mb-6">
-              <Shield className="w-8 h-8 text-white" />
+      <section className="py-20 px-6">
+        <div className="max-w-3xl mx-auto">
+          <div className="cozy-card rounded-3xl p-10 text-center">
+            <div className="w-16 h-16 bg-[rgb(184,134,98)] rounded-2xl flex items-center justify-center mx-auto mb-6">
+              <Shield className="w-8 h-8 text-[rgb(255,253,250)]" />
             </div>
-            <h2 className="text-3xl font-bold text-stone-900 mb-4">
+            <h2 className="text-2xl font-semibold text-[rgb(62,56,48)] mb-4">
               Important to know
             </h2>
-            <p className="text-stone-600 leading-relaxed max-w-2xl mx-auto">
-              Therapist AI provides supportive conversation but is not a replacement for professional mental health care. 
-              This AI is not a licensed therapist and cannot diagnose conditions or provide medical advice. 
-              If you&apos;re experiencing a mental health crisis, please contact a crisis helpline or emergency services immediately.
+            <p className="text-[rgb(139,116,95)] leading-relaxed">
+              This is a supportive space for reflection, but it&apos;s not a replacement for professional mental health care. 
+              This AI cannot diagnose conditions or provide medical advice. 
+              If you&apos;re experiencing a crisis, please reach out to a professional immediately.
             </p>
-            <div className="mt-8 pt-8 border-t border-stone-200">
-              <p className="text-sm text-stone-500">
-                <strong className="text-stone-700">In crisis?</strong> Call 988 (US) • Text HELLO to 741741 • Contact emergency services
+            <div className="mt-8 pt-8 border-t border-[rgb(230,224,216)]">
+              <p className="text-sm text-[rgb(156,148,138)]">
+                <strong className="text-[rgb(139,116,95)]">In crisis?</strong> Call 988 (US) • Text HELLO to 741741 • Contact emergency services
               </p>
             </div>
           </div>
@@ -175,29 +162,25 @@ export default function LandingPage() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-24 px-6 relative overflow-hidden">
-        <div className="absolute inset-0 -z-10">
-          <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-indigo-100/50 via-purple-100/30 to-pink-100/50"></div>
-        </div>
-        
-        <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-5xl font-bold text-stone-900 mb-6">
-            Ready to start?
+      <section className="py-20 px-6">
+        <div className="max-w-3xl mx-auto text-center">
+          <h2 className="text-4xl font-semibold text-[rgb(62,56,48)] mb-6">
+            Ready to begin?
           </h2>
-          <p className="text-xl text-stone-600 mb-10 max-w-2xl mx-auto">
-            Join thousands finding clarity and support through thoughtful conversation
+          <p className="text-xl text-[rgb(139,116,95)] mb-10">
+            Take a moment for yourself
           </p>
           <SignedOut>
             <SignUpButton mode="modal">
-              <button className="px-10 py-5 bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white rounded-xl transition-all text-lg font-semibold shadow-2xl shadow-indigo-500/30 hover-lift">
-                Get Started Free
+              <button className="soft-button text-lg px-10 py-4">
+                Start a Conversation
               </button>
             </SignUpButton>
           </SignedOut>
           <SignedIn>
             <Link href="/chat">
-              <button className="px-10 py-5 bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white rounded-xl transition-all text-lg font-semibold shadow-2xl shadow-indigo-500/30 hover-lift">
-                Open App
+              <button className="soft-button text-lg px-10 py-4">
+                Continue
               </button>
             </Link>
           </SignedIn>
@@ -205,16 +188,16 @@ export default function LandingPage() {
       </section>
 
       {/* Footer */}
-      <footer className="py-12 px-6 border-t border-stone-200/50 bg-white/50 backdrop-blur-sm">
+      <footer className="py-12 px-6 border-t border-[rgb(230,224,216)] bg-[rgb(255,253,250)]/50">
         <div className="max-w-6xl mx-auto text-center">
-          <div className="flex items-center justify-center gap-2 mb-4">
-            <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center">
-              <Heart className="w-4 h-4 text-white" />
+          <div className="flex items-center justify-center gap-3 mb-4">
+            <div className="w-8 h-8 rounded-xl bg-[rgb(139,116,95)] flex items-center justify-center">
+              <Heart className="w-4 h-4 text-[rgb(255,253,250)]" />
             </div>
-            <span className="text-lg font-semibold text-stone-900">Therapist</span>
+            <span className="text-lg font-medium text-[rgb(62,56,48)]">Therapist</span>
           </div>
-          <p className="text-sm text-stone-500">
-            © 2026 Therapist AI. Built with care for emotional wellbeing.
+          <p className="text-sm text-[rgb(156,148,138)]">
+            A calm space for reflection and understanding
           </p>
         </div>
       </footer>
@@ -222,19 +205,18 @@ export default function LandingPage() {
   );
 }
 
-function FeatureCard({ icon, title, description, gradient }: { 
+function FeatureCard({ icon, title, description }: { 
   icon: React.ReactNode; 
   title: string; 
   description: string;
-  gradient: string;
 }) {
   return (
-    <div className="glass rounded-2xl p-8 hover-lift transition-smooth group">
-      <div className={`w-14 h-14 bg-gradient-to-br ${gradient} rounded-xl flex items-center justify-center mb-6 text-white group-hover:scale-110 transition-transform`}>
+    <div className="cozy-card rounded-2xl p-8 text-center">
+      <div className="w-14 h-14 bg-[rgb(248,244,238)] rounded-2xl flex items-center justify-center mx-auto mb-6 text-[rgb(139,116,95)]">
         {icon}
       </div>
-      <h3 className="text-xl font-semibold text-stone-900 mb-3">{title}</h3>
-      <p className="text-stone-600 leading-relaxed">{description}</p>
+      <h3 className="text-xl font-semibold text-[rgb(62,56,48)] mb-3">{title}</h3>
+      <p className="text-[rgb(139,116,95)] leading-relaxed">{description}</p>
     </div>
   );
 }
@@ -245,13 +227,13 @@ function StepCard({ number, title, description }: {
   description: string;
 }) {
   return (
-    <div className="flex gap-6 items-start group">
-      <div className="flex-shrink-0 w-14 h-14 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-2xl flex items-center justify-center text-white font-bold text-xl shadow-lg shadow-indigo-500/25 group-hover:scale-110 transition-transform">
+    <div className="flex gap-6 items-start">
+      <div className="flex-shrink-0 w-12 h-12 bg-[rgb(139,116,95)] rounded-2xl flex items-center justify-center text-[rgb(255,253,250)] font-semibold text-lg">
         {number}
       </div>
-      <div className="flex-1 glass rounded-2xl p-6 hover-lift transition-smooth">
-        <h3 className="text-xl font-semibold text-stone-900 mb-2">{title}</h3>
-        <p className="text-stone-600">{description}</p>
+      <div className="flex-1 cozy-card rounded-2xl p-6">
+        <h3 className="text-lg font-semibold text-[rgb(62,56,48)] mb-2">{title}</h3>
+        <p className="text-[rgb(139,116,95)]">{description}</p>
       </div>
     </div>
   );

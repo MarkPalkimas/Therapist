@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { Send, Sparkles, Loader2 } from "lucide-react";
+import { Send, Loader2 } from "lucide-react";
 
 type Message = {
   role: "user" | "assistant";
@@ -9,10 +9,10 @@ type Message = {
 };
 
 const STARTER_PROMPTS = [
-  { text: "I feel overwhelmed today", emoji: "😔" },
-  { text: "I need help processing something", emoji: "💭" },
-  { text: "I want to reflect on my day", emoji: "✨" },
-  { text: "I feel anxious about something", emoji: "😰" },
+  "I feel overwhelmed",
+  "I need help thinking something through",
+  "I want to reflect on my day",
+  "I feel anxious",
 ];
 
 export default function ChatInterface() {
@@ -98,19 +98,21 @@ export default function ChatInterface() {
   };
 
   return (
-    <div className="flex-1 flex flex-col h-full relative bg-[rgb(var(--background))] transition-colors duration-300">
+    <div className="flex-1 flex flex-col h-full relative">
       {/* Messages Area */}
       <div className="flex-1 overflow-y-auto px-6 py-8">
         <div className="max-w-4xl mx-auto space-y-6">
           {messages.length === 0 ? (
-            <div className="flex flex-col items-center justify-center min-h-[60vh] space-y-8 animate-fade-in">
-              <div className="text-center space-y-4">
-                <div className="w-20 h-20 mx-auto bg-[rgb(var(--primary))] rounded-3xl flex items-center justify-center shadow-lg animate-scale-in">
-                  <Sparkles className="w-10 h-10 text-[rgb(var(--primary-foreground))]" />
+            <div className="flex flex-col items-center justify-center min-h-[60vh] space-y-10 animate-fade-in">
+              <div className="text-center space-y-4 max-w-xl">
+                <div className="w-20 h-20 mx-auto bg-[rgb(139,116,95)] rounded-3xl flex items-center justify-center warm-glow">
+                  <Heart className="w-10 h-10 text-[rgb(255,253,250)]" />
                 </div>
-                <h2 className="text-3xl font-bold text-[rgb(var(--foreground))]">How are you feeling today?</h2>
-                <p className="text-[rgb(var(--muted-foreground))] text-lg max-w-md">
-                  Share what&apos;s on your mind, or choose a prompt below to get started
+                <h2 className="text-3xl font-semibold text-[rgb(62,56,48)]">
+                  What&apos;s been on your mind today?
+                </h2>
+                <p className="text-lg text-[rgb(139,116,95)] leading-relaxed">
+                  This is a safe space. Share whatever feels right.
                 </p>
               </div>
               
@@ -119,16 +121,13 @@ export default function ChatInterface() {
                 {STARTER_PROMPTS.map((prompt, index) => (
                   <button
                     key={index}
-                    onClick={() => handleStarterPrompt(prompt.text)}
-                    className="bg-[rgb(var(--card))] border border-[rgb(var(--border))] px-6 py-5 rounded-2xl text-left hover:bg-[rgb(var(--secondary))] hover:shadow-md transition-all group"
+                    onClick={() => handleStarterPrompt(prompt)}
+                    className="cozy-card px-6 py-5 rounded-2xl text-left"
                     style={{ animationDelay: `${index * 0.1}s` }}
                   >
-                    <div className="flex items-start gap-3">
-                      <span className="text-2xl">{prompt.emoji}</span>
-                      <span className="text-[rgb(var(--foreground))] group-hover:text-[rgb(var(--foreground))] font-medium">
-                        {prompt.text}
-                      </span>
-                    </div>
+                    <span className="text-[rgb(62,56,48)] font-medium">
+                      {prompt}
+                    </span>
                   </button>
                 ))}
               </div>
@@ -140,17 +139,17 @@ export default function ChatInterface() {
                   key={index}
                   className={`flex ${
                     message.role === "user" ? "justify-end" : "justify-start"
-                  } animate-slide-in-right`}
+                  } animate-slide-in`}
                   style={{ animationDelay: `${index * 0.05}s` }}
                 >
                   <div
-                    className={`max-w-[85%] rounded-3xl px-6 py-4 shadow-sm ${
+                    className={`max-w-[85%] ${
                       message.role === "user"
-                        ? "bg-[rgb(var(--primary))] text-[rgb(var(--primary-foreground))]"
-                        : "bg-[rgb(var(--card))] text-[rgb(var(--foreground))] border border-[rgb(var(--border))]"
+                        ? "message-user"
+                        : "message-assistant"
                     }`}
                   >
-                    <p className="whitespace-pre-wrap leading-relaxed text-[15px]">
+                    <p className="whitespace-pre-wrap leading-relaxed">
                       {message.content}
                     </p>
                   </div>
@@ -159,9 +158,9 @@ export default function ChatInterface() {
               
               {isLoading && (
                 <div className="flex justify-start animate-fade-in">
-                  <div className="bg-[rgb(var(--card))] border border-[rgb(var(--border))] rounded-3xl px-6 py-4 flex items-center gap-3 shadow-sm">
-                    <Loader2 className="w-5 h-5 text-[rgb(var(--primary))] animate-spin" />
-                    <span className="text-[rgb(var(--muted-foreground))] text-sm font-medium">Thinking...</span>
+                  <div className="cozy-card rounded-3xl px-6 py-4 flex items-center gap-3">
+                    <Loader2 className="w-5 h-5 text-[rgb(139,116,95)] animate-spin" />
+                    <span className="text-[rgb(139,116,95)] text-sm font-medium">Listening...</span>
                   </div>
                 </div>
               )}
@@ -181,9 +180,9 @@ export default function ChatInterface() {
       </div>
 
       {/* Input Area */}
-      <div className="border-t border-[rgb(var(--border))] bg-[rgb(var(--card))] px-6 py-6 shadow-sm">
+      <div className="border-t border-[rgb(230,224,216)] bg-[rgb(255,253,250)]/80 backdrop-blur-sm px-6 py-6">
         <form onSubmit={(e) => { e.preventDefault(); handleSubmit(); }} className="max-w-4xl mx-auto">
-          <div className="flex gap-3 items-end bg-[rgb(var(--background))] rounded-3xl p-3 shadow-sm border border-[rgb(var(--border))] focus-within:border-[rgb(var(--primary))] focus-within:shadow-md transition-all">
+          <div className="flex gap-3 items-end cozy-card rounded-3xl p-3">
             <textarea
               ref={textareaRef}
               value={input}
@@ -191,18 +190,18 @@ export default function ChatInterface() {
               onKeyDown={handleKeyDown}
               placeholder="Share what's on your mind..."
               rows={1}
-              className="flex-1 bg-transparent text-[rgb(var(--foreground))] placeholder-[rgb(var(--muted-foreground))] px-3 py-2 resize-none focus:outline-none text-[15px]"
+              className="flex-1 bg-transparent text-[rgb(62,56,48)] placeholder-[rgb(156,148,138)] px-3 py-2 resize-none focus:outline-none"
               style={{ maxHeight: '150px' }}
             />
             <button
               type="submit"
               disabled={!input.trim() || isLoading}
-              className="flex-shrink-0 bg-[rgb(var(--primary))] hover:opacity-90 disabled:opacity-40 disabled:cursor-not-allowed text-[rgb(var(--primary-foreground))] rounded-2xl p-3 transition-all shadow-sm hover:shadow-md hover:scale-105"
+              className="flex-shrink-0 bg-[rgb(139,116,95)] hover:bg-[rgb(168,145,122)] disabled:bg-[rgb(156,148,138)] disabled:cursor-not-allowed text-[rgb(255,253,250)] rounded-2xl p-3 transition-all"
             >
               <Send className="w-5 h-5" />
             </button>
           </div>
-          <p className="text-xs text-[rgb(var(--muted-foreground))] mt-3 text-center">
+          <p className="text-xs text-[rgb(156,148,138)] mt-3 text-center">
             Press Enter to send • Shift + Enter for new line
           </p>
         </form>
