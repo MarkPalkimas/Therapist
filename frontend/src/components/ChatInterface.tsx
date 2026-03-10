@@ -105,13 +105,13 @@ export default function ChatInterface() {
           {messages.length === 0 ? (
             <div className="flex flex-col items-center justify-center min-h-[60vh] space-y-10 animate-fade-in">
               <div className="text-center space-y-4 max-w-xl">
-                <div className="w-20 h-20 mx-auto bg-[rgb(139,116,95)] rounded-3xl flex items-center justify-center warm-glow">
-                  <Heart className="w-10 h-10 text-[rgb(255,253,250)]" />
+                <div className="w-20 h-20 mx-auto bg-[#7A6A58] rounded-3xl flex items-center justify-center shadow-sm">
+                  <Heart className="w-10 h-10 text-white" />
                 </div>
-                <h2 className="text-3xl font-semibold text-[rgb(62,56,48)]">
+                <h2 className="text-3xl font-semibold text-[#2F2A25]">
                   What&apos;s been on your mind today?
                 </h2>
-                <p className="text-lg text-[rgb(139,116,95)] leading-relaxed">
+                <p className="text-lg text-neutral-600 leading-relaxed">
                   This is a safe space. Share whatever feels right.
                 </p>
               </div>
@@ -122,10 +122,9 @@ export default function ChatInterface() {
                   <button
                     key={index}
                     onClick={() => handleStarterPrompt(prompt)}
-                    className="cozy-card px-6 py-5 rounded-2xl text-left"
-                    style={{ animationDelay: `${index * 0.1}s` }}
+                    className="bg-white rounded-xl shadow-sm border border-neutral-200 px-6 py-5 text-left hover:shadow-md transition-all"
                   >
-                    <span className="text-[rgb(62,56,48)] font-medium">
+                    <span className="text-[#2F2A25] font-medium">
                       {prompt}
                     </span>
                   </button>
@@ -158,9 +157,9 @@ export default function ChatInterface() {
               
               {isLoading && (
                 <div className="flex justify-start animate-fade-in">
-                  <div className="cozy-card rounded-3xl px-6 py-4 flex items-center gap-3">
-                    <Loader2 className="w-5 h-5 text-[rgb(139,116,95)] animate-spin" />
-                    <span className="text-[rgb(139,116,95)] text-sm font-medium">Listening...</span>
+                  <div className="bg-white rounded-xl shadow-sm border border-neutral-200 px-6 py-4 flex items-center gap-3">
+                    <Loader2 className="w-5 h-5 text-[#7A6A58] animate-spin" />
+                    <span className="text-[#7A6A58] text-sm font-medium">Listening...</span>
                   </div>
                 </div>
               )}
@@ -180,9 +179,9 @@ export default function ChatInterface() {
       </div>
 
       {/* Input Area */}
-      <div className="border-t border-[rgb(230,224,216)] bg-[rgb(255,253,250)]/80 backdrop-blur-sm px-6 py-6">
+      <div className="border-t border-neutral-200 bg-white/80 backdrop-blur-sm px-6 py-6">
         <form onSubmit={(e) => { e.preventDefault(); handleSubmit(); }} className="max-w-4xl mx-auto">
-          <div className="flex gap-3 items-end cozy-card rounded-3xl p-3">
+          <div className="flex gap-3 items-end bg-white rounded-xl shadow-sm border border-neutral-200 p-3">
             <textarea
               ref={textareaRef}
               value={input}
@@ -190,18 +189,18 @@ export default function ChatInterface() {
               onKeyDown={handleKeyDown}
               placeholder="Share what's on your mind..."
               rows={1}
-              className="flex-1 bg-transparent text-[rgb(62,56,48)] placeholder-[rgb(156,148,138)] px-3 py-2 resize-none focus:outline-none"
+              className="flex-1 bg-transparent text-[#2F2A25] placeholder-neutral-500 px-3 py-2 resize-none focus:outline-none"
               style={{ maxHeight: '150px' }}
             />
             <button
               type="submit"
               disabled={!input.trim() || isLoading}
-              className="flex-shrink-0 bg-[rgb(139,116,95)] hover:bg-[rgb(168,145,122)] disabled:bg-[rgb(156,148,138)] disabled:cursor-not-allowed text-[rgb(255,253,250)] rounded-2xl p-3 transition-all"
+              className="flex-shrink-0 bg-[#7A6A58] hover:bg-[#645747] disabled:bg-neutral-400 disabled:cursor-not-allowed text-white rounded-xl p-3 transition-all"
             >
               <Send className="w-5 h-5" />
             </button>
           </div>
-          <p className="text-xs text-[rgb(156,148,138)] mt-3 text-center">
+          <p className="text-xs text-neutral-500 mt-3 text-center">
             Press Enter to send • Shift + Enter for new line
           </p>
         </form>
