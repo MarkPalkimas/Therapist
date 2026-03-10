@@ -14,17 +14,17 @@ export default async function ChatPage() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col bg-gradient-to-br from-stone-50 via-amber-50/30 to-rose-50/20">
+    <div className="min-h-screen flex flex-col bg-gradient-to-br from-stone-50 via-amber-50/20 to-orange-50/10">
       {/* Header */}
       <header className="glass border-b border-stone-200/50 sticky top-0 z-10">
         <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center shadow-lg shadow-indigo-500/25">
-              <Heart className="w-5 h-5 text-white" />
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-stone-600 to-stone-700 flex items-center justify-center shadow-lg shadow-stone-600/20">
+              <Heart className="w-5 h-5 text-amber-50" />
             </div>
             <div>
               <h1 className="text-lg font-semibold text-stone-900">Therapist</h1>
-              <p className="text-xs text-stone-500">Your safe space</p>
+              <p className="text-xs text-stone-500">Your quiet space</p>
             </div>
           </div>
           <UserButton 

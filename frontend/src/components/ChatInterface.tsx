@@ -9,9 +9,9 @@ type Message = {
 };
 
 const STARTER_PROMPTS = [
-  { text: "I feel overwhelmed today", emoji: "😔" },
-  { text: "I need help processing something", emoji: "💭" },
-  { text: "I want to reflect on my day", emoji: "✨" },
+  { text: "I feel overwhelmed", emoji: "😔" },
+  { text: "I want to think something through", emoji: "💭" },
+  { text: "I need to slow down and reflect", emoji: "🌿" },
   { text: "I feel anxious about something", emoji: "😰" },
 ];
 
@@ -98,19 +98,19 @@ export default function ChatInterface() {
   };
 
   return (
-    <div className="flex-1 flex flex-col h-full relative bg-gradient-to-br from-stone-50 via-amber-50/30 to-rose-50/20">
+    <div className="flex-1 flex flex-col h-full relative bg-gradient-to-br from-stone-50 via-amber-50/20 to-orange-50/10">
       {/* Messages Area */}
       <div className="flex-1 overflow-y-auto px-6 py-8">
         <div className="max-w-4xl mx-auto space-y-6">
           {messages.length === 0 ? (
             <div className="flex flex-col items-center justify-center min-h-[60vh] space-y-8 animate-fade-in">
               <div className="text-center space-y-4">
-                <div className="w-20 h-20 mx-auto bg-gradient-to-br from-indigo-500 to-purple-600 rounded-3xl flex items-center justify-center shadow-xl shadow-indigo-500/25 animate-scale-in">
-                  <Sparkles className="w-10 h-10 text-white" />
+                <div className="w-20 h-20 mx-auto bg-gradient-to-br from-stone-600 to-stone-700 rounded-3xl flex items-center justify-center shadow-xl shadow-stone-600/20 animate-scale-in">
+                  <Sparkles className="w-10 h-10 text-amber-50" />
                 </div>
-                <h2 className="text-3xl font-bold text-stone-900">How are you feeling today?</h2>
+                <h2 className="text-3xl font-bold text-stone-900">What&apos;s been on your mind?</h2>
                 <p className="text-stone-600 text-lg max-w-md">
-                  Share what&apos;s on your mind, or choose a prompt below to get started
+                  This is a safe space. Share whatever feels right.
                 </p>
               </div>
               
@@ -146,7 +146,7 @@ export default function ChatInterface() {
                   <div
                     className={`max-w-[85%] rounded-3xl px-6 py-4 ${
                       message.role === "user"
-                        ? "bg-gradient-to-br from-indigo-500 to-purple-600 text-white shadow-lg shadow-indigo-500/25"
+                        ? "bg-gradient-to-br from-stone-700 to-stone-800 text-amber-50 shadow-lg shadow-stone-700/20"
                         : "glass text-stone-800 soft-shadow"
                     }`}
                   >
@@ -160,8 +160,8 @@ export default function ChatInterface() {
               {isLoading && (
                 <div className="flex justify-start animate-fade-in">
                   <div className="glass rounded-3xl px-6 py-4 flex items-center gap-3 soft-shadow">
-                    <Loader2 className="w-5 h-5 text-indigo-500 animate-spin" />
-                    <span className="text-stone-600 text-sm font-medium">Thinking...</span>
+                    <Loader2 className="w-5 h-5 text-amber-600 animate-spin" />
+                    <span className="text-stone-600 text-sm font-medium">Listening...</span>
                   </div>
                 </div>
               )}
@@ -183,7 +183,7 @@ export default function ChatInterface() {
       {/* Input Area */}
       <div className="border-t border-stone-200/50 glass px-6 py-6">
         <form onSubmit={(e) => { e.preventDefault(); handleSubmit(); }} className="max-w-4xl mx-auto">
-          <div className="flex gap-3 items-end bg-white rounded-3xl p-3 soft-shadow border border-stone-200/50 focus-within:border-indigo-300 focus-within:shadow-lg focus-within:shadow-indigo-500/10 transition-all">
+          <div className="flex gap-3 items-end bg-white rounded-3xl p-3 soft-shadow border border-stone-200/50 focus-within:border-amber-300 focus-within:shadow-lg focus-within:shadow-amber-600/10 transition-all">
             <textarea
               ref={textareaRef}
               value={input}
@@ -197,7 +197,7 @@ export default function ChatInterface() {
             <button
               type="submit"
               disabled={!input.trim() || isLoading}
-              className="flex-shrink-0 bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 disabled:from-stone-300 disabled:to-stone-400 disabled:cursor-not-allowed text-white rounded-2xl p-3 transition-all shadow-lg shadow-indigo-500/25 hover:shadow-xl hover:shadow-indigo-500/30 hover:scale-105"
+              className="flex-shrink-0 bg-gradient-to-r from-stone-700 to-stone-800 hover:from-stone-800 hover:to-stone-900 disabled:from-stone-300 disabled:to-stone-400 disabled:cursor-not-allowed text-amber-50 rounded-2xl p-3 transition-all shadow-lg shadow-stone-700/20 hover:shadow-xl hover:shadow-stone-700/25 hover:scale-105"
             >
               <Send className="w-5 h-5" />
             </button>
