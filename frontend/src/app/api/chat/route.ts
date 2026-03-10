@@ -1,6 +1,5 @@
 import { auth } from "@clerk/nextjs/server";
 import { NextRequest, NextResponse } from "next/server";
-import { GoogleGenerativeAI } from "@google/generative-ai";
 
 // Force dynamic rendering
 export const dynamic = 'force-dynamic';
@@ -111,66 +110,65 @@ export async function POST(req: NextRequest) {
 
     // Validate Gemini API key
     console.log("Step 3: Validating Gemini API key...");
-    console.log("Environment variables available:", Object.keys(process.env).filter(k => k.includes('GEMINI') || k.includes('API')));
     const apiKey = process.env.GEMINI_API_KEY;
     console.log("API key exists:", !!apiKey);
-    console.log("API key length:", apiKey?.length);
-    console.log("API key type:", typeof apiKey);
     
     if (!apiKey || apiKey === 'undefined' || apiKey === 'null') {
       console.error("GEMINI_API_KEY is not configured in environment");
-      console.error("All env keys:", Object.keys(process.env).join(', '));
       return NextResponse.json(
         { error: "Service configuration error - API key missing" },
         { status: 500 }
       );
     }
 
-    // Initialize Gemini client
-    console.log("Step 4: Initializing Gemini client...");
-    const genAI = new GoogleGenerativeAI(apiKey);
-    const model = genAI.getGenerativeModel({ 
-      model: "gemini-1.5-flash",
-    });
+    // Build conversation with system prompt
+    console.log("Step 4: Building conversation...");
+    const conversationText = `${THERAPIST_SYSTEM_PROMPT}\n\nConversation:\n${messages.map(m => `${m.role === 'user' ? 'User' : 'Assistant'}: ${m.content}`).join('\n')}\n\nAssistant:`;
 
-    // Convert messages to Gemini format and prepend system prompt
-    console.log("Step 5: Converting messages to Gemini format...");
-    const allMessages = [
-      { role: "user", content: THERAPIST_SYSTEM_PROMPT },
-      { role: "assistant", content: "I understand. I'll act as a compassionate AI companion following these guidelines." },
-      ...messages
-    ];
+    // Call Gemini REST API directly
+    console.log("Step 5: Calling Gemini REST API...");
+    const response = await fetch(
+      `https://generativelanguage.googleapis.com/v1/models/gemini-pro:generateContent?key=${apiKey}`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          contents: [{
+            parts: [{
+              text: conversationText
+            }]
+          }],
+          generationConfig: {
+            temperature: 0.8,
+            maxOutputTokens: 1000,
+          }
+        })
+      }
+    );
+
+    console.log("Step 6: Gemini API response status:", response.status);
     
-    const history = allMessages.slice(0, -1).map((msg) => ({
-      role: msg.role === "assistant" ? "model" : "user",
-      parts: [{ text: msg.content }],
-    }));
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error("Gemini API error:", errorText);
+      return NextResponse.json(
+        { error: "AI service error" },
+        { status: 500 }
+      );
+    }
 
-    const lastMessage = allMessages[allMessages.length - 1];
+    const data = await response.json();
+    console.log("Step 7: Response received successfully");
     
-    // Start chat with history
-    console.log("Step 6: Starting Gemini chat with", history.length, "history messages...");
-    const chat = model.startChat({
-      history,
-      generationConfig: {
-        temperature: 0.8,
-        maxOutputTokens: 1000,
-      },
-    });
+    const reply = data.candidates?.[0]?.content?.parts?.[0]?.text || "I'm here to listen. Could you tell me more?";
 
-    // Send the latest message
-    console.log("Step 7: Sending message to Gemini...");
-    const result = await chat.sendMessage(lastMessage.content);
-    const response = result.response;
-    const reply = response.text() || "I'm here to listen. Could you tell me more?";
-
-    console.log("Step 8: Gemini response received successfully");
     return NextResponse.json({ reply });
   } catch (error) {
     console.error("=== CHAT API ERROR ===");
     console.error("Error caught in main try/catch:", error);
     
-    // More detailed error logging
     if (error instanceof Error) {
       console.error("Error type:", error.constructor.name);
       console.error("Error name:", error.name);
