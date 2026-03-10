@@ -57,27 +57,12 @@ interface Message {
 }
 
 export async function POST(req: NextRequest) {
-  console.log("=== Chat API called ===");
-  
   try {
     // Authenticate the user
-    console.log("Step 1: Authenticating user...");
-    let userId: string | null = null;
-    
-    try {
-      const authResult = await auth();
-      userId = authResult?.userId || null;
-      console.log("Auth result:", { userId, hasAuth: !!authResult });
-    } catch (authError) {
-      console.error("Auth error:", authError);
-      return NextResponse.json(
-        { error: "Authentication failed" },
-        { status: 401 }
-      );
-    }
+    const authResult = await auth();
+    const userId = authResult?.userId;
     
     if (!userId) {
-      console.error("No user ID found after auth");
       return NextResponse.json(
         { error: "Unauthorized - please sign in" },
         { status: 401 }
@@ -85,74 +70,50 @@ export async function POST(req: NextRequest) {
     }
 
     // Parse request body
-    console.log("Step 2: Parsing request body...");
-    let body;
-    try {
-      body = await req.json();
-    } catch (parseError) {
-      console.error("JSON parse error:", parseError);
-      return NextResponse.json(
-        { error: "Invalid request body" },
-        { status: 400 }
-      );
-    }
-    
+    const body = await req.json();
     const { messages } = body as { messages: Message[] };
-    console.log("Messages received:", messages?.length, "messages");
 
     if (!messages || !Array.isArray(messages)) {
-      console.error("Invalid messages format:", typeof messages);
       return NextResponse.json(
         { error: "Invalid request: messages array required" },
         { status: 400 }
       );
     }
 
-    // Validate Gemini API key
-    console.log("Step 3: Validating Gemini API key...");
-    const apiKey = process.env.GEMINI_API_KEY;
-    console.log("API key exists:", !!apiKey);
+    // Validate Groq API key
+    const apiKey = process.env.GROQ_API_KEY;
     
-    if (!apiKey || apiKey === 'undefined' || apiKey === 'null') {
-      console.error("GEMINI_API_KEY is not configured in environment");
+    if (!apiKey) {
       return NextResponse.json(
-        { error: "Service configuration error - API key missing" },
+        { error: "Service configuration error" },
         { status: 500 }
       );
     }
 
-    // Build conversation with system prompt
-    console.log("Step 4: Building conversation...");
-    const conversationText = `${THERAPIST_SYSTEM_PROMPT}\n\nConversation:\n${messages.map(m => `${m.role === 'user' ? 'User' : 'Assistant'}: ${m.content}`).join('\n')}\n\nAssistant:`;
-
-    // Call Gemini REST API directly
-    console.log("Step 5: Calling Gemini REST API...");
+    // Call Groq API
     const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1/models/gemini-pro:generateContent?key=${apiKey}`,
+      'https://api.groq.com/openai/v1/chat/completions',
       {
         method: 'POST',
         headers: {
+          'Authorization': `Bearer ${apiKey}`,
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          contents: [{
-            parts: [{
-              text: conversationText
-            }]
-          }],
-          generationConfig: {
-            temperature: 0.8,
-            maxOutputTokens: 1000,
-          }
+          model: 'llama-3.3-70b-versatile',
+          messages: [
+            { role: 'system', content: THERAPIST_SYSTEM_PROMPT },
+            ...messages
+          ],
+          temperature: 0.8,
+          max_tokens: 1000,
         })
       }
     );
-
-    console.log("Step 6: Gemini API response status:", response.status);
     
     if (!response.ok) {
       const errorText = await response.text();
-      console.error("Gemini API error:", errorText);
+      console.error("Groq API error:", errorText);
       return NextResponse.json(
         { error: "AI service error" },
         { status: 500 }
@@ -160,21 +121,11 @@ export async function POST(req: NextRequest) {
     }
 
     const data = await response.json();
-    console.log("Step 7: Response received successfully");
-    
-    const reply = data.candidates?.[0]?.content?.parts?.[0]?.text || "I'm here to listen. Could you tell me more?";
+    const reply = data.choices?.[0]?.message?.content || "I'm here to listen. Could you tell me more?";
 
     return NextResponse.json({ reply });
   } catch (error) {
-    console.error("=== CHAT API ERROR ===");
-    console.error("Error caught in main try/catch:", error);
-    
-    if (error instanceof Error) {
-      console.error("Error type:", error.constructor.name);
-      console.error("Error name:", error.name);
-      console.error("Error message:", error.message);
-      console.error("Error stack:", error.stack);
-    }
+    console.error("Chat API error:", error);
     
     return NextResponse.json(
       { error: "Failed to process your message. Please try again." },
