@@ -130,18 +130,23 @@ export async function POST(req: NextRequest) {
     console.log("Step 4: Initializing Gemini client...");
     const genAI = new GoogleGenerativeAI(apiKey);
     const model = genAI.getGenerativeModel({ 
-      model: "gemini-1.5-flash-latest",
-      systemInstruction: THERAPIST_SYSTEM_PROMPT,
+      model: "gemini-pro",
     });
 
-    // Convert messages to Gemini format
+    // Convert messages to Gemini format and prepend system prompt
     console.log("Step 5: Converting messages to Gemini format...");
-    const history = messages.slice(0, -1).map((msg) => ({
+    const allMessages = [
+      { role: "user", content: THERAPIST_SYSTEM_PROMPT },
+      { role: "assistant", content: "I understand. I'll act as a compassionate AI companion following these guidelines." },
+      ...messages
+    ];
+    
+    const history = allMessages.slice(0, -1).map((msg) => ({
       role: msg.role === "assistant" ? "model" : "user",
       parts: [{ text: msg.content }],
     }));
 
-    const lastMessage = messages[messages.length - 1];
+    const lastMessage = allMessages[allMessages.length - 1];
     
     // Start chat with history
     console.log("Step 6: Starting Gemini chat with", history.length, "history messages...");
