@@ -111,14 +111,17 @@ export async function POST(req: NextRequest) {
 
     // Validate Gemini API key
     console.log("Step 3: Validating Gemini API key...");
+    console.log("Environment variables available:", Object.keys(process.env).filter(k => k.includes('GEMINI') || k.includes('API')));
     const apiKey = process.env.GEMINI_API_KEY;
     console.log("API key exists:", !!apiKey);
     console.log("API key length:", apiKey?.length);
+    console.log("API key type:", typeof apiKey);
     
-    if (!apiKey) {
+    if (!apiKey || apiKey === 'undefined' || apiKey === 'null') {
       console.error("GEMINI_API_KEY is not configured in environment");
+      console.error("All env keys:", Object.keys(process.env).join(', '));
       return NextResponse.json(
-        { error: "Service configuration error" },
+        { error: "Service configuration error - API key missing" },
         { status: 500 }
       );
     }
