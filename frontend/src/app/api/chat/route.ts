@@ -130,7 +130,7 @@ export async function POST(req: NextRequest) {
     console.log("Step 4: Initializing Gemini client...");
     const genAI = new GoogleGenerativeAI(apiKey);
     const model = genAI.getGenerativeModel({ 
-      model: "gemini-pro",
+      model: "gemini-1.5-flash",
     });
 
     // Convert messages to Gemini format and prepend system prompt
