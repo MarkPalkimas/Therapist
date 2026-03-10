@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { Send, Loader2 } from "lucide-react";
+import { Send, Loader2, Heart } from "lucide-react";
 
 type Message = {
   role: "user" | "assistant";
